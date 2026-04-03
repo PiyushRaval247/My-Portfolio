@@ -1,6 +1,7 @@
 import { BlogNavbar } from "@/components/BlogNavbar";
 import { BlogFooter } from "@/components/BlogFooter";
 import ScrollToTop from "@/components/ScrollToTop";
+import { Suspense } from "react";
 
 export default function MagazineLayout({ children }) {
   return (
@@ -40,7 +41,11 @@ export default function MagazineLayout({ children }) {
         .magazine-body p { margin-bottom: 2.5rem !important; }
       `}} />
 
-      <BlogNavbar />
+      {/* Suspense is required for BlogNavbar as it uses useSearchParams() */}
+      <Suspense fallback={<div className="h-20 bg-white border-b border-black/5" />}>
+        <BlogNavbar />
+      </Suspense>
+      
       <main className="relative z-10">
         {children}
       </main>
