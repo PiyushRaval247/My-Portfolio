@@ -42,14 +42,17 @@ export default function BlogClientPage({ blog, initialComments, latestArticles =
   });
 
   const calculateReadingTime = useMemo(() => {
-    const words = blog.description.split(/\s+/).length;
+    const text = blog.description || "";
+    const words = text.split(/\s+/).length;
     return Math.ceil(words / 200);
   }, [blog.description]);
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (typeof window !== "undefined") {
+      navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   const handleCommentSubmit = async (e) => {
@@ -78,8 +81,42 @@ export default function BlogClientPage({ blog, initialComments, latestArticles =
     return DOMPurify.sanitize(html);
   };
 
+  // Elite SEO Intelligence: BlogPosting Schema
+  const blogJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": blog.title,
+    "description": blog.sub_title,
+    "image": blog.image_url,
+    "author": {
+      "@type": "Person",
+      "name": "Piyush Raval",
+      "url": "https://piyushraval.com"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Piyush Press",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://piyushraval.com/icon.png"
+      }
+    },
+    "datePublished": blog.created_at,
+    "dateModified": blog.updated_at || blog.created_at,
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://piyushraval.com/blog/${blog.id}`
+    }
+  };
+
   return (
     <div className="pt-32 pb-48 px-6 md:px-12 relative z-10 bg-[#fdfdfd] min-h-screen text-black">
+      {/* BlogPosting Schema Embedding */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
+      />
+
       {/* Sharp Progress Bar (Zero Radius) */}
       <motion.div 
          className="fixed top-0 left-0 right-0 h-2 bg-[#008060] origin-left z-[1000]"
@@ -97,8 +134,8 @@ export default function BlogClientPage({ blog, initialComments, latestArticles =
         >
           <div className="max-w-4xl">
              <Link href="/blog" className="inline-flex items-center gap-5 text-[11px] font-black italic uppercase tracking-[0.4em] text-black/30 hover:text-[#008060] mb-20 group transition-all">
-               <ArrowLeft className="w-5 h-5 group-hover:-translate-x-3 transition-transform duration-700" />
-               Index of Dispatches
+                <ArrowLeft className="w-5 h-5 group-hover:-translate-x-3 transition-transform duration-700" />
+                Index of Dispatches
              </Link>
 
              {/* Header Metadata: SHARP & ARCHITECTURAL */}
@@ -215,7 +252,7 @@ export default function BlogClientPage({ blog, initialComments, latestArticles =
                        placeholder="Operational Email..."
                        className="w-full px-8 py-6 bg-transparent rounded-none border border-black/10 focus:border-black outline-none text-[10px] font-black italic tracking-[0.4em] uppercase transition-all"
                      />
-                     <button className="w-full bg-black text-white hover:bg-[#008060] py-6 rounded-none text-[11px] font-black uppercase tracking-[0.6em] transition-all shadow-none italic" icon={MoveUpRight}>
+                     <button className="w-full bg-black text-white hover:bg-[#008060] py-6 rounded-none text-[11px] font-black uppercase tracking-[0.6em] transition-all shadow-none italic">
                         INITIALIZE ACCESS
                      </button>
                   </div>
@@ -281,7 +318,7 @@ export default function BlogClientPage({ blog, initialComments, latestArticles =
                         <div className="absolute top-0 -left-[5px] w-[8px] h-[8px] bg-black opacity-10 group-hover:opacity-100 group-hover:bg-[#008060] transition-all"></div>
                         <div className="flex items-center gap-10">
                            <div className="w-16 h-16 bg-black/[0.03] rounded-none border border-black/10 flex items-center justify-center font-black uppercase italic text-black/20 group-hover:bg-black group-hover:text-white transition-all duration-700">
-                              {comment.name[0]}
+                              {(comment?.name?.[0] || 'U').toUpperCase()}
                            </div>
                            <div className="flex flex-col">
                               <h4 className="font-black text-xl italic uppercase tracking-tighter leading-none mb-2">{comment.name}</h4>
