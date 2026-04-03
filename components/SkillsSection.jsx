@@ -1,26 +1,7 @@
+"use client";
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
-// Import your images
-import htmlIcon from "@/assets/icons/html.png";
-import cssIcon from "@/assets/icons/css.png";
-import tailwindIcon from "@/assets/icons/tailwind.png";
-import jsIcon from "@/assets/icons/javascript.png";
-import reactIcon from "@/assets/icons/react.png";
-import nextjsIcon from "@/assets/icons/nextjs.png";
-import nodejsIcon from "@/assets/icons/nodejs.png";
-import expressIcon from "@/assets/icons/express.png";
-import mongodbIcon from "@/assets/icons/mongodb.png";
-
-import javaIcon from "@/assets/icons/java.png";
-
-import gitIcon from "@/assets/icons/git.png";
-import githubIcon from "@/assets/icons/github.png";
-
-import vscodeIcon from "@/assets/icons/vscode.png";
-import clearkIcon from "@/assets/icons/cleark.png";
-import SQLIcon from "@/assets/icons/sql.png";
-import MySQLIcon from "@/assets/icons/mysql.png";
 
 const skills = [
   // Frontend
@@ -53,24 +34,24 @@ const categories = [
   { id: "tools", label: "Tools", color: "bg-gradient-to-r from-orange-500 to-yellow-500" },
 ];
 
-// Create an icon mapping object
+// Create an icon mapping object using public paths
 const iconImages = {
-  html: htmlIcon,
-  css: cssIcon,
-  tailwind: tailwindIcon,
-  javascript: jsIcon,
-  react: reactIcon,
-  nextjs: nextjsIcon,
-  nodejs: nodejsIcon,
-  express: expressIcon,
-  mongodb: mongodbIcon,
-  java: javaIcon,
-  git: gitIcon,
-  github: githubIcon,
-  vscode: vscodeIcon,
-  cleark: clearkIcon,
-  sql: SQLIcon,
-  mysql: MySQLIcon,
+  html: "/assets/icons/html.png",
+  css: "/assets/icons/css.png",
+  tailwind: "/assets/icons/tailwind.png",
+  javascript: "/assets/icons/javascript.png",
+  react: "/assets/icons/react.png",
+  nextjs: "/assets/icons/nextjs.png",
+  nodejs: "/assets/icons/nodejs.png",
+  express: "/assets/icons/express.png",
+  mongodb: "/assets/icons/mongodb.png",
+  java: "/assets/icons/java.png",
+  git: "/assets/icons/git.png",
+  github: "/assets/icons/github.png",
+  vscode: "/assets/icons/vscode.png",
+  cleark: "/assets/icons/cleark.png",
+  sql: "/assets/icons/sql.png",
+  mysql: "/assets/icons/mysql.png",
 };
 
 const SkillBar = ({ level }) => {

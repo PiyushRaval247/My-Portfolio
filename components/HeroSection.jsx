@@ -1,3 +1,5 @@
+"use client";
+
 import { ArrowDown, MousePointerClick, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRef } from "react";
