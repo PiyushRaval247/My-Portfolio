@@ -1,31 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
-const skills = [
-  // Frontend
-  { name: "HTML5", level: 95, category: "frontend", icon: "html" },
-  { name: "CSS3", level: 90, category: "frontend", icon: "css" },
-  { name: "Tailwindcss", level: 85, category: "frontend", icon: "tailwind" },
-  { name: "JavaScript", level: 90, category: "frontend", icon: "javascript" },
-  { name: "React", level: 90, category: "frontend", icon: "react" },
-  { name: "Next.js", level: 75, category: "frontend", icon: "nextjs" },
-
-  // Backend
-  { name: "Node.js", level: 90, category: "backend", icon: "nodejs" },
-  { name: "Express", level: 85, category: "backend", icon: "express" },
-  { name: "MongoDB", level: 90, category: "backend", icon: "mongodb" },
-
-
-  // Tools
-  { name: "Git", level: 90, category: "tools", icon: "git" },
-  { name: "GitHub", level: 90, category: "tools", icon: "github" },
-  { name: "VS Code", level: 95, category: "tools", icon: "vscode" },
-  { name: "Cleark", level: 90, category: "tools", icon: "cleark" },
-  { name: "SQL", level: 90, category: "tools", icon: "sql" },
-  { name: "MySQL", level: 90, category: "tools", icon: "mysql" },
-];
+import { supabase } from "@/lib/supabase";
+import { Loader2, Zap } from "lucide-react";
 
 const categories = [
   { id: "all", label: "All Skills", color: "bg-gradient-to-r from-purple-500 to-pink-500" },
@@ -34,7 +12,6 @@ const categories = [
   { id: "tools", label: "Tools", color: "bg-gradient-to-r from-orange-500 to-yellow-500" },
 ];
 
-// Create an icon mapping object using public paths
 const iconImages = {
   html: "/assets/icons/html.png",
   css: "/assets/icons/css.png",
@@ -100,10 +77,10 @@ const InfiniteScrollSkills = ({ skills }) => {
         }}
       >
         {duplicatedSkills.map((skill, index) => {
-          const iconSrc = iconImages[skill.icon];
+          const iconSrc = iconImages[skill.icon] || "/assets/icons/react.png";
           return (
             <div 
-              key={`${skill.name}-${index}`} 
+              key={`${skill.id}-${index}`} 
               className="flex-shrink-0 flex flex-col items-center gap-2"
             >
               <div className="w-16 h-16 rounded-full bg-card border-2 border-primary/50 flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
@@ -111,6 +88,7 @@ const InfiniteScrollSkills = ({ skills }) => {
                   src={iconSrc} 
                   alt={skill.name} 
                   className="w-8 h-8 object-contain" 
+                  onError={(e) => e.target.src = "/assets/icons/react.png"}
                 />
               </div>
               <span className="text-sm font-medium text-center">{skill.name}</span>
@@ -132,10 +110,10 @@ const InfiniteScrollSkills = ({ skills }) => {
         }}
       >
         {[...duplicatedSkills].reverse().map((skill, index) => {
-          const iconSrc = iconImages[skill.icon];
+          const iconSrc = iconImages[skill.icon] || "/assets/icons/react.png";
           return (
             <div 
-              key={`${skill.name}-reverse-${index}`} 
+              key={`${skill.id}-reverse-${index}`} 
               className="flex-shrink-0 flex flex-col items-center gap-2"
             >
               <div className="w-16 h-16 rounded-full bg-card border-2 border-primary/50 flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
@@ -143,6 +121,7 @@ const InfiniteScrollSkills = ({ skills }) => {
                   src={iconSrc} 
                   alt={skill.name} 
                   className="w-8 h-8 object-contain" 
+                  onError={(e) => e.target.src = "/assets/icons/react.png"}
                 />
               </div>
               <span className="text-sm font-medium text-center">{skill.name}</span>
@@ -156,10 +135,34 @@ const InfiniteScrollSkills = ({ skills }) => {
 
 export const SkillsSection = () => {
   const [activeCategory, setActiveCategory] = useState("all");
+  const [skills, setSkills] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchSkills();
+  }, []);
+
+  const fetchSkills = async () => {
+    const { data, error } = await supabase
+      .from("skills")
+      .select("*")
+      .order("level", { ascending: false });
+
+    if (!error) setSkills(data);
+    setLoading(false);
+  };
 
   const filteredSkills = skills.filter(
     (skill) => activeCategory === "all" || skill.category === activeCategory
   );
+
+  if (loading) {
+    return (
+      <div className="py-28 flex items-center justify-center">
+        <Loader2 className="w-12 h-12 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <section id="skills" className="py-28 px-4 relative bg-gradient-to-br from-background via-secondary/5 to-background">
@@ -171,11 +174,12 @@ export const SkillsSection = () => {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
-            My Skills
+          <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-4 italic uppercase">
+            Technical <span className="text-primary">Inventory</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Technologies I've mastered and my proficiency levels
+          <div className="w-24 h-1 bg-primary mx-auto mb-6 opacity-30 italic"></div>
+          <p className="text-muted-foreground max-w-2xl mx-auto text-lg font-medium opacity-80 italic">
+            A comprehensive index of my technical proficiencies and implementation levels.
           </p>
         </motion.div>
 
@@ -191,12 +195,12 @@ export const SkillsSection = () => {
               key={category.id}
               onClick={() => setActiveCategory(category.id)}
               className={[
-                "px-6 py-2.5 rounded-full transition-all duration-300 font-medium text-sm md:text-base",
-                "border border-transparent hover:shadow-lg",
+                "px-8 py-3 rounded-2xl transition-all duration-300 font-black uppercase tracking-widest text-[10px] sm:text-xs",
+                "border border-white/5 hover:border-primary/20",
                 "flex items-center gap-2",
                 activeCategory === category.id
-                  ? `${category.color} text-white shadow-md`
-                  : "bg-secondary/50 text-foreground hover:bg-secondary/70"
+                  ? `${category.color} text-white shadow-xl shadow-primary/10`
+                  : "bg-card/40 backdrop-blur-xl text-muted-foreground hover:bg-card/60"
               ].join(" ")}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -215,31 +219,32 @@ export const SkillsSection = () => {
           >
             <AnimatePresence mode="popLayout">
               {filteredSkills.map((skill) => {
-                const iconSrc = iconImages[skill.icon];
+                const iconSrc = iconImages[skill.icon] || "/assets/icons/react.png";
                 return (
                   <motion.div
-                    key={skill.name}
+                    key={skill.id}
                     layout
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ duration: 0.3 }}
-                    className="bg-card p-6 rounded-2xl border border-border/30 hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-lg group"
+                    className="bg-card/30 backdrop-blur-3xl p-8 rounded-[2rem] border border-white/5 hover:border-primary/50 transition-all duration-500 shadow-sm hover:shadow-2xl hover:shadow-primary/5 group"
                   >
-                    <div className="flex items-start gap-4 mb-5">
-                      <div className="w-12 h-12 rounded-full bg-card border-2 border-primary/50 flex items-center justify-center">
+                    <div className="flex items-start gap-4 mb-6">
+                      <div className="w-12 h-12 rounded-2xl bg-card border-2 border-primary/30 flex items-center justify-center group-hover:scale-110 transition-transform">
                         <img 
                           src={iconSrc} 
                           alt={skill.name} 
                           className="w-6 h-6 object-contain" 
+                          onError={(e) => e.target.src = "/assets/icons/react.png"}
                         />
                       </div>
                       <div className="flex-1">
-                        <div className="flex justify-between items-center">
-                          <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
+                        <div className="flex justify-between items-center mb-1">
+                          <h3 className="font-black tracking-tight text-lg group-hover:text-primary transition-colors italic">
                             {skill.name}
                           </h3>
-                          <span className={`text-sm font-medium px-2 py-1 rounded-full 
+                          <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full 
                             ${skill.level > 75 ? 'bg-emerald-500/10 text-emerald-500' : 
                               skill.level > 50 ? 'bg-amber-500/10 text-amber-500' : 
                               'bg-pink-500/10 text-pink-500'}`}>
@@ -247,9 +252,8 @@ export const SkillsSection = () => {
                           </span>
                         </div>
                         <SkillBar level={skill.level} />
-                        <div className="mt-2 flex justify-between text-xs text-muted-foreground">
+                        <div className="mt-3 flex justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">
                           <span>Basic</span>
-                          <span>Advanced</span>
                           <span>Expert</span>
                         </div>
                       </div>
@@ -263,11 +267,11 @@ export const SkillsSection = () => {
 
         {filteredSkills.length === 0 && (
           <motion.div 
-            className="text-center py-16"
+            className="text-center py-20 bg-white/5 rounded-[3rem] border border-dashed border-white/10"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            <p className="text-muted-foreground text-lg">No skills found in this category</p>
+            <p className="text-muted-foreground font-black uppercase tracking-widest italic opacity-40">Section Under Maintenance</p>
           </motion.div>
         )}
       </div>

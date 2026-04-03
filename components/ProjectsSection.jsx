@@ -40,15 +40,41 @@ export const ProjectsSection = () => {
       id="projects"
       className="py-24 px-4 relative bg-gradient-to-b from-background to-muted/20"
     >
+      {/* Structured Data for Projects */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "itemListElement": projects.map((p, i) => ({
+              "@type": "ListItem",
+              "position": i + 1,
+              "item": {
+                "@type": "SoftwareSourceCode",
+                "name": p.title,
+                "description": p.description,
+                "author": {
+                  "@type": "Person",
+                  "name": "Piyush Raval"
+                },
+                "programmingLanguage": p.tags?.join(", "),
+                "image": p.image_url,
+                "codeRepository": p.github_url
+              }
+            }))
+          })
+        }}
+      />
+
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Featured <span className="text-primary">Projects</span>
+          <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-4">
+            Featured <span className="text-primary italic">Projects</span>
           </h2>
-          <div className="w-24 h-1 bg-primary mx-auto mb-4"></div>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Here are some of my recent projects, each carefully crafted with
-            attention to detail, performance, and user experience.
+          <div className="w-24 h-1 bg-primary mx-auto mb-4 opacity-50"></div>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-medium opacity-80 italic">
+            A curated inventory of high-impact technical deployments, crafted with precision and performance.
           </p>
         </div>
 
@@ -56,49 +82,49 @@ export const ProjectsSection = () => {
           {displayedProjects.map((project) => (
             <div
               key={project.id}
-              className="group bg-card rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-muted hover:border-primary/20"
+              className="group bg-card/40 backdrop-blur-xl rounded-[2rem] overflow-hidden shadow-2xl hover:shadow-primary/5 transition-all duration-500 border border-white/5 hover:border-primary/20"
             >
-              <div className="h-52 overflow-hidden relative">
+              <div className="h-56 overflow-hidden relative">
                 <img
                   src={project.image_url}
-                  alt={project.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  alt={`Snapshot of project: ${project.title} - Built by Piyush Raval`}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                  <p className="text-white text-sm translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
+                  <p className="text-white text-xs font-medium leading-relaxed translate-y-4 group-hover:translate-y-0 transition-transform duration-500 italic opacity-80">
                     {project.description}
                   </p>
                 </div>
               </div>
 
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors">
+              <div className="p-8">
+                <h3 className="text-xl font-black tracking-tight mb-4 text-foreground group-hover:text-primary transition-colors">
                   {project.title}
                 </h3>
 
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex flex-wrap gap-2 mb-6">
                   {project.tags?.map((tag, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 text-xs font-medium rounded-full bg-muted text-foreground border border-muted-foreground/10 hover:bg-primary hover:text-primary-foreground transition-colors"
+                      className="px-3 py-1 bg-white/5 text-muted-foreground border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/10 hover:text-primary hover:border-primary/20 transition-all"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
 
-                <div className="flex justify-between items-center mt-4">
-                  <div className="flex space-x-4">
+                <div className="flex justify-between items-center pt-6 border-t border-white/5">
+                  <div className="flex space-x-6">
                     {project.demo_url && (
                       <a
                         href={project.demo_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
-                        aria-label={`View ${project.title} demo`}
+                        className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all group/link"
+                        aria-label={`Launch ${project.title} live environment`}
                       >
-                        <ExternalLink size={16} />
-                        <span>Live Demo</span>
+                        <ExternalLink size={14} className="group-hover/link:scale-110 transition-transform" />
+                        <span>Launch Live</span>
                       </a>
                     )}
                     {project.github_url && (
@@ -106,10 +132,10 @@ export const ProjectsSection = () => {
                         href={project.github_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
-                        aria-label={`View ${project.title} source code`}
+                        className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all group/link"
+                        aria-label={`View the ${project.title} source code on GitHub`}
                       >
-                        <Github size={16} />
+                        <Github size={14} className="group-hover/link:scale-110 transition-transform" />
                         <span>Source Code</span>
                       </a>
                     )}

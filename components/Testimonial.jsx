@@ -1,41 +1,32 @@
 "use client";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { useInView } from "framer-motion";
-import { Quote, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
+import { Quote, Star, ChevronLeft, ChevronRight, Loader2, Sparkles } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 export const TestimonialSection = () => {
+  const [testimonials, setTestimonials] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(3);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
 
-  const testimonials = [
-    {
-      id: 1,
-      name: "Alex Johnson",
-      role: "Product Director at TechCorp",
-      content: `Working with Piyush was seamless from day one. Not only did they deliver a full-stack solution ahead of schedule, but they also communicated clearly throughout the project. It's rare to find a developer who understands both the tech and the business side so well`,
-      rating: 5,
-      image: "/testimonials/alex-johnson.png"
-    },
-    {
-      id: 2,
-      name: "Maria Chen",
-      role: "Senior UX Designer at DesignHub",
-      content: `I've reviewed hundreds of portfolios, and his work is truly exceptional. Tway the animations guide attention while maintaining performance is masterful. The gradient elements add depth without overwhelming.`,
-      rating: 5,
-      image: "/testimonials/maria-chen.png"
-    },
-    {
-      id: 3,
-      name: "David Wilson",
-      role: "CTO at Startup Ventures",
-      content: `From wireframes to deployment, Piyush owned the entire stack with confidence and creativity. The final product is fast, reliable, and looks incredible. I wouldn't hesitate to work with them again.`,
-      rating: 5,
-      image: "/testimonials/David Wilson.png"
-    },
-  ];
+  useEffect(() => {
+    fetchTestimonials();
+  }, []);
+
+  const fetchTestimonials = async () => {
+    const { data, error } = await supabase
+      .from("testimonials")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (!error) setTestimonials(data);
+    setLoading(false);
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -64,254 +55,156 @@ export const TestimonialSection = () => {
     setCurrentIndex((prev) => (prev - 1 + totalPages) % totalPages);
   };
 
-  const visibleTestimonials = testimonials.slice(
-    currentIndex * itemsPerPage,
-    (currentIndex + 1) * itemsPerPage
-  );
-
-  // Fill empty slots on last page if needed
-  while (visibleTestimonials.length < itemsPerPage) {
-    visibleTestimonials.push(testimonials[visibleTestimonials.length]);
+  if (loading) {
+    return (
+      <div className="py-24 flex items-center justify-center bg-black/5">
+        <Loader2 className="w-10 h-10 animate-spin text-primary opacity-20" />
+      </div>
+    );
   }
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        ease: [0.16, 1, 0.3, 1]
-      }
-    }
-  };
 
   return (
     <section
       id="testimonials"
-      className="relative py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background"
+      className="relative py-24 sm:py-32 px-6 md:px-12 overflow-hidden border-t border-white/5 bg-[#030014]"
       ref={ref}
     >
-      {/* Floating particles background */}
-      <div className="absolute inset-0 overflow-hidden -z-10">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full bg-primary/10"
-            style={{
-              width: Math.random() * 10 + 2 + 'px',
-              height: Math.random() * 10 + 2 + 'px',
-              left: Math.random() * 100 + '%',
-              top: Math.random() * 100 + '%',
-            }}
-            animate={{
-              y: [0, (Math.random() - 0.5) * 100],
-              x: [0, (Math.random() - 0.5) * 50],
-              opacity: [0.2, 0.8, 0.2],
-            }}
-            transition={{
-              duration: Math.random() * 10 + 10,
-              repeat: Infinity,
-              repeatType: 'reverse',
-              ease: 'linear'
-            }}
-          />
-        ))}
-      </div>
+      <div className="max-w-[1550px] mx-auto relative z-10">
+        
+        {/* Header: Sharp Editorial Style */}
+        <div className="flex flex-col md:flex-row items-end justify-between gap-12 mb-24 border-b border-white/10 pb-16">
+          <div className="max-w-2xl">
+             <motion.div
+               initial={{ opacity: 0, x: -20 }}
+               animate={isInView ? { opacity: 1, x: 0 } : {}}
+               className="flex items-center gap-4 mb-8"
+             >
+                <div className="w-12 h-1 bg-primary"></div>
+                <span className="text-[10px] font-black uppercase tracking-[0.5em] text-primary italic">Operational Reputation</span>
+             </motion.div>
+             
+             <h2 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-[-0.05em] text-white italic uppercase leading-[0.95]">
+                Public <span className="text-primary italic">Endorsements</span>
+             </h2>
+          </div>
 
-      <motion.div
-        className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-20"
-        initial={{ width: 0 }}
-        animate={{ width: "100%" }}
-        transition={{ duration: 1.5, delay: 0.5 }}
-      />
+          <p className="text-base sm:text-lg text-white/40 font-medium max-w-sm italic text-right leading-relaxed">
+             A surgical look at professional collaborations and architectural validation from industry leaders.
+          </p>
+        </div>
 
-      <div className="container max-w-6xl mx-auto">
-        <motion.div
-          className="space-y-12 sm:space-y-16"
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-        >
-          <motion.div className="text-center" variants={itemVariants}>
-            <motion.div
-              className="text-sm sm:text-lg font-mono text-primary mb-3 sm:mb-4 inline-flex items-center gap-2 px-3 py-1 sm:px-4 sm:py-2 rounded-full bg-primary/10 border border-primary/20"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.4 }}
-            >
-              <Star className="h-3 w-3 sm:h-4 sm:w-4" />
-              Client Feedback
-              <Star className="h-3 w-3 sm:h-4 sm:w-4" />
-            </motion.div>
-            <motion.h2
-              className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight"
-              variants={itemVariants}
-            >
-              What People Say
-            </motion.h2>
-            <motion.p
-              className="text-base sm:text-lg text-muted-foreground mt-3 sm:mt-4 max-w-2xl mx-auto"
-              variants={itemVariants}
-            >
-              What Clients Will Say About Working with Me.
-            </motion.p>
-          </motion.div>
-
-          <div className="relative">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {visibleTestimonials.map((testimonial) => (
+        {/* Testimonial Feed */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border border-white/10">
+          <AnimatePresence mode="wait">
+            {testimonials.length > 0 ? (
+              testimonials.slice(currentIndex * itemsPerPage, (currentIndex + 1) * itemsPerPage).map((testimonial, idx) => (
                 <motion.div
-                  key={testimonial.id}
-                  className="bg-background/80 backdrop-blur-sm border rounded-xl p-6 sm:p-8 shadow-sm hover:shadow-md transition-all h-full flex flex-col group"
-                  variants={itemVariants}
-                  whileHover={{ y: -5 }}
+                  key={`${testimonial.id}-${idx}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="p-10 sm:p-12 border-b md:border-b-0 md:border-r border-white/10 bg-white/[0.01] hover:bg-white/[0.03] transition-all flex flex-col group min-h-[400px]"
                 >
-                  <div className="flex flex-col h-full">
-                    <Quote className="h-6 w-6 sm:h-8 sm:w-8 text-primary/30 mb-3 sm:mb-4 group-hover:text-primary/50 transition-colors" />
+                  <Quote className="h-10 w-10 text-primary/10 mb-10 group-hover:text-primary/40 transition-colors" />
 
-                    <p className="text-base sm:text-lg text-muted-foreground mb-4 sm:mb-6 flex-1">
-                      "{testimonial.content}"
-                    </p>
+                  <p className="text-lg text-white/70 mb-12 flex-1 font-medium leading-relaxed italic border-l-2 border-white/5 pl-8 group-hover:border-primary/30 transition-colors">
+                    "{testimonial.content}"
+                  </p>
 
-                    <div className="mt-auto">
-                      <div className="flex mb-2">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-4 w-4 sm:h-5 sm:w-5 ${i < testimonial.rating ? 'text-yellow-400 fill-yellow-400' : 'text-muted-foreground/30'}`}
+                  <div className="mt-auto pt-10 border-t border-white/5">
+                    <div className="flex gap-1 mb-6">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`h-3 w-3 ${i < testimonial.rating ? 'text-primary fill-primary' : 'text-white/5'}`}
+                        />
+                      ))}
+                    </div>
+
+                    <div className="flex items-center gap-6">
+                      <div className="h-16 w-16 rounded-none border border-white/10 overflow-hidden shrink-0 group-hover:border-primary/50 transition-all relative">
+                        {testimonial.image ? (
+                          <Image
+                            src={testimonial.image}
+                            alt={testimonial.name}
+                            fill
+                            className="object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
                           />
-                        ))}
+                        ) : (
+                          <div className="w-full h-full bg-white/5 flex items-center justify-center text-primary/40 font-black uppercase italic text-2xl">
+                            {testimonial.name.charAt(0)}
+                          </div>
+                        )}
                       </div>
-
-                      <div className="flex items-center gap-3 sm:gap-4 mt-3 sm:mt-4">
-                        <div className="relative h-10 w-10 sm:h-12 sm:w-12 rounded-full border-2 border-primary/20 group-hover:border-primary/50 overflow-hidden transition-all">
-                          {testimonial.image ? (
-                            <img
-                              src={testimonial.image}
-                              alt={testimonial.name}
-                              className="w-full h-full object-cover"
-                              loading="lazy"
-                            />
-                          ) : (
-                            <div className="w-full h-full bg-primary/10 flex items-center justify-center text-primary/50">
-                              {testimonial.name.charAt(0)}
-                            </div>
-                          )}
-                        </div>
-                        <div>
-                          <p className="font-medium text-sm sm:text-base">{testimonial.name}</p>
-                          <p className="text-xs sm:text-sm text-muted-foreground">{testimonial.role}</p>
-                        </div>
+                      <div className="min-w-0">
+                        <p className="font-black text-lg tracking-[-0.02em] text-white italic truncate uppercase leading-none mb-1">{testimonial.name}</p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 truncate italic leading-none">{testimonial.role}</p>
                       </div>
                     </div>
                   </div>
                 </motion.div>
-              ))}
-            </div>
-
-            {/* Navigation Arrows - Show only when needed */}
-            {totalPages > 1 && (
-              <>
-                <button
-                  onClick={prevTestimonial}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 sm:-translate-x-4 p-2 sm:p-3 rounded-full border border-muted-foreground/20 hover:border-primary/50 bg-background/80 backdrop-blur-sm transition-all shadow-lg z-10 hidden sm:flex items-center justify-center hover:scale-110"
-                  aria-label="Previous testimonial"
-                >
-                  <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
-                </button>
-
-                <button
-                  onClick={nextTestimonial}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 sm:translate-x-4 p-2 sm:p-3 rounded-full border border-muted-foreground/20 hover:border-primary/50 bg-background/80 backdrop-blur-sm transition-all shadow-lg z-10 hidden sm:flex items-center justify-center hover:scale-110"
-                  aria-label="Next testimonial"
-                >
-                  <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
-                </button>
-              </>
+              ))
+            ) : (
+              /* PROFESSIONAL PLACEHOLDER (Ensures Section Visibility) */
+              [...Array(3)].map((_, i) => (
+                <div key={i} className="p-12 border-r border-white/10 bg-white/[0.01] opacity-20 flex flex-col gap-10">
+                   <Quote className="w-10 h-10 opacity-10" />
+                   <div className="space-y-4">
+                      <div className="h-2 w-full bg-white/10 text-white"></div>
+                      <div className="h-2 w-4/5 bg-white/10 text-white"></div>
+                      <div className="h-2 w-3/4 bg-white/10 text-white"></div>
+                   </div>
+                   <div className="mt-auto flex items-center gap-6">
+                      <div className="w-14 h-14 bg-white/10 text-white"></div>
+                      <div className="space-y-2">
+                        <div className="h-3 w-24 bg-white/10 text-white"></div>
+                        <div className="h-2 w-16 bg-white/10 text-white"></div>
+                      </div>
+                   </div>
+                </div>
+              ))
             )}
-          </div>
+          </AnimatePresence>
+        </div>
 
-          {/* Mobile Navigation - Show only when needed */}
-          {totalPages > 1 && (
-            <div className="flex justify-center gap-3 sm:gap-4 sm:hidden">
-              <button
-                onClick={prevTestimonial}
-                className="p-1 sm:p-2 rounded-full border border-muted-foreground/20 hover:border-primary/50 bg-background/80 backdrop-blur-sm transition-all hover:scale-110"
-                aria-label="Previous testimonial"
-              >
-                <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
-              </button>
-
-              <div className="flex items-center gap-2">
-                {Array.from({ length: totalPages }).map((_, index) => (
+        {/* Operational Controls: Sharp Style */}
+        <div className="flex items-center justify-between mt-16 px-4">
+          {totalPages > 1 ? (
+             <>
+                <div className="flex items-center gap-8 text-[11px] font-black italic uppercase tracking-[0.4em] text-white/20">
+                  <span className="text-white">0{currentIndex + 1}</span>
+                  <div className="h-px w-20 bg-white/10 text-white"></div>
+                  <span>0{totalPages}</span>
+                </div>
+                
+                <div className="flex gap-0">
                   <button
-                    key={index}
-                    onClick={() => setCurrentIndex(index)}
-                    className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all ${currentIndex === index ? 'bg-primary' : 'bg-muted-foreground/20'}`}
-                    aria-label={`Go to testimonial ${index + 1}`}
-                  />
-                ))}
-              </div>
-
-              <button
-                onClick={nextTestimonial}
-                className="p-1 sm:p-2 rounded-full border border-muted-foreground/20 hover:border-primary/50 bg-background/80 backdrop-blur-sm transition-all hover:scale-110"
-                aria-label="Next testimonial"
-              >
-                <ChevronRight className="h-4 w-4 sm:h-5 sm:h-5" />
-              </button>
-            </div>
+                    onClick={prevTestimonial}
+                    className="w-16 h-16 flex items-center justify-center border border-white/10 hover:bg-white/5 text-white/20 hover:text-white transition-all text-white"
+                  >
+                    <ChevronLeft className="h-6 w-6" />
+                  </button>
+                  <button
+                    onClick={nextTestimonial}
+                    className="w-16 h-16 flex items-center justify-center border border-white/10 border-l-0 hover:bg-white/5 text-white/20 hover:text-white transition-all text-white"
+                  >
+                    <ChevronRight className="h-6 w-6" />
+                  </button>
+                </div>
+             </>
+          ) : (
+             <div className="flex items-center gap-4 py-8">
+                <Sparkles className="w-5 h-5 text-primary opacity-30 animate-pulse" />
+                <span className="text-[10px] font-black text-white/10 uppercase tracking-[0.5em] italic">Intelligence Log: Syncing Professional Endorsements</span>
+             </div>
           )}
-        </motion.div>
+        </div>
       </div>
 
-      {/* Animated gradient background elements */}
-      <motion.div
-        className="absolute inset-0 -z-10 overflow-hidden"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.1 }}
-        transition={{ delay: 1, duration: 1.5 }}
-      >
-        <motion.div
-          className="absolute top-1/4 left-1/4 w-48 sm:w-64 h-48 sm:h-64 rounded-full bg-gradient-to-r from-primary to-purple-500 blur-[80px] sm:blur-[100px] opacity-30"
-          animate={{
-            x: [0, 20, 0],
-            y: [0, -30, 0],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            repeatType: 'reverse',
-            ease: 'easeInOut'
-          }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 right-1/4 w-48 sm:w-64 h-48 sm:h-64 rounded-full bg-gradient-to-r from-blue-500 to-primary blur-[80px] sm:blur-[100px] opacity-30"
-          animate={{
-            x: [0, -20, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            repeatType: 'reverse',
-            ease: 'easeInOut',
-            delay: 5
-          }}
-        />
-      </motion.div>
+      {/* Grid Pattern Background */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-[-1]" 
+        style={{ backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`, backgroundSize: '100px 100px' }}
+      ></div>
     </section>
   );
 };

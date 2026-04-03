@@ -21,13 +21,13 @@ import { motion } from "framer-motion";
 import { cn } from "../lib/utils";
 
 const navItems = [
-  { name: "Home", href: "#hero", icon: Home },
-  { name: "About", href: "#about", icon: User },
-  { name: "Skills", href: "#skills", icon: Code },
-  { name: "Projects", href: "#projects", icon: Briefcase },
-  { name: "Testimonials", href: "#testimonials", icon: MessageSquare },
-  { name: "Contact", href: "#contact", icon: Mail },
-  { name: "Blog", href: "https://my-blog-piyush.vercel.app/", icon: BookOpen },
+  { name: "Home", href: "/#hero", icon: Home },
+  { name: "About", href: "/#about", icon: User },
+  { name: "Skills", href: "/#skills", icon: Code },
+  { name: "Projects", href: "/#projects", icon: Briefcase },
+  { name: "Testimonials", href: "/#testimonials", icon: MessageSquare },
+  { name: "Contact", href: "/#contact", icon: Mail },
+  { name: "Blog", href: "/blog", icon: BookOpen },
 ];
 
 const ThemeToggle = () => {
@@ -60,7 +60,7 @@ const ThemeToggle = () => {
   );
 };
 
-export const Navbar = () => {
+export const Navbar = ({ hideSocials = false }) => {
   const [activeSection, setActiveSection] = useState("#hero");
   const [showNavbar, setShowNavbar] = useState(true);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
@@ -141,77 +141,76 @@ export const Navbar = () => {
 
   return (
     <>
-      {/* Top Right Buttons */}
-      <motion.div
-        className="fixed top-4 right-4 z-50 flex gap-2"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        {/* GitHub Button */}
-        <motion.a
-          href="https://github.com/PiyushRaval247" 
-          target="_blank"
-          rel="noopener noreferrer"
-          className={cn(
-            "p-2 rounded-full bg-white/80 dark:bg-black/80 backdrop-blur-md",
-            "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50",
-            "border border-gray-200 dark:border-gray-700 shadow-sm",
-            "flex items-center justify-center"
-          )}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          title="GitHub Profile"
-          aria-label="GitHub Profile"
+      {/* Top Right Buttons: Only show if not specifically hidden */}
+      {!hideSocials && (
+        <motion.div
+          className="fixed top-4 right-4 z-50 flex gap-2"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
         >
-          <Github className="w-5 h-5" />
-        </motion.a>
+          {/* GitHub Button */}
+          <motion.a
+            href="https://github.com/PiyushRaval247" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(
+              "p-2 rounded-full bg-white/80 dark:bg-black/80 backdrop-blur-md",
+              "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50",
+              "border border-gray-200 dark:border-gray-700 shadow-sm",
+              "flex items-center justify-center"
+            )}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            title="GitHub Profile"
+            aria-label="GitHub Profile"
+          >
+            <Github className="w-5 h-5" />
+          </motion.a>
 
-        {/* LinkedIn Button */}
-        <motion.a
-          href="https://www.linkedin.com/in/piyush-raval-939594261/" 
-          target="_blank"
-          rel="noopener noreferrer"
-          className={cn(
-            "p-2 rounded-full bg-white/80 dark:bg-black/80 backdrop-blur-md",
-            "text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/50",
-            "border border-gray-200 dark:border-gray-700 shadow-sm",
-            "flex items-center justify-center"
-          )}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          title="LinkedIn Profile"
-          aria-label="LinkedIn Profile"
-        >
-          <Linkedin className="w-5 h-5" />
-        </motion.a>
+          {/* LinkedIn Button */}
+          <motion.a
+            href="https://www.linkedin.com/in/piyush-raval-939594261/" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(
+              "p-2 rounded-full bg-white/80 dark:bg-black/80 backdrop-blur-md",
+              "text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/50",
+              "border border-gray-200 dark:border-gray-700 shadow-sm",
+              "flex items-center justify-center"
+            )}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            title="LinkedIn Profile"
+            aria-label="LinkedIn Profile"
+          >
+            <Linkedin className="w-5 h-5" />
+          </motion.a>
 
-        {/* YouTube Button */}
- 
-
-        {/* Music Button */}
-        <motion.button
-          onClick={toggleMusic}
-          disabled={!isAudioReady}
-          className={cn(
-            "p-2 rounded-full bg-white/80 dark:bg-black/80 backdrop-blur-md",
-            "text-primary hover:bg-primary/10 dark:hover:bg-primary/20",
-            "border border-gray-200 dark:border-gray-700 shadow-sm",
-            "flex items-center justify-center",
-            !isAudioReady && "opacity-50 cursor-not-allowed"
-          )}
-          whileHover={{ scale: isAudioReady ? 1.05 : 1 }}
-          whileTap={{ scale: isAudioReady ? 0.95 : 1 }}
-          title={
-            isAudioReady ? (isMusicPlaying ? "Pause music" : "Play music") : "Loading music..."
-          }
-          aria-label={
-            isAudioReady ? (isMusicPlaying ? "Pause music" : "Play music") : "Loading music"
-          }
-        >
-          {isMusicPlaying ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
-        </motion.button>
-      </motion.div>
+          {/* Music Button */}
+          <motion.button
+            onClick={toggleMusic}
+            disabled={!isAudioReady}
+            className={cn(
+              "p-2 rounded-full bg-white/80 dark:bg-black/80 backdrop-blur-md",
+              "text-primary hover:bg-primary/10 dark:hover:bg-primary/20",
+              "border border-gray-200 dark:border-gray-700 shadow-sm",
+              "flex items-center justify-center",
+              !isAudioReady && "opacity-50 cursor-not-allowed"
+            )}
+            whileHover={{ scale: isAudioReady ? 1.05 : 1 }}
+            whileTap={{ scale: isAudioReady ? 0.95 : 1 }}
+            title={
+              isAudioReady ? (isMusicPlaying ? "Pause music" : "Play music") : "Loading music..."
+            }
+            aria-label={
+              isAudioReady ? (isMusicPlaying ? "Pause music" : "Play music") : "Loading music"
+            }
+          >
+            {isMusicPlaying ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+          </motion.button>
+        </motion.div>
+      )}
 
       {/* Bottom Navbar */}
       <motion.div
