@@ -4,11 +4,23 @@ import { Providers } from "./providers";
 export const metadata = {
   metadataBase: new URL("https://piyushraval.com"),
   title: {
-    default: "Piyush Raval | Full Stack Developer & AI Enthusiast",
+    default: "Piyush Raval | MERN Stack Developer & Full Stack Engineer",
     template: "%s | Piyush Raval"
   },
-  description: "Official portfolio of Piyush Raval, a Full Stack Developer specializing in React, Next.js, and AI-driven web applications. Discover cutting-edge projects and insights on modern web development.",
-  keywords: ["Piyush Raval", "piyushraval", "piyushrava", "Piyushraval Mernstack Developer", "Full Stack Developer", "Software Engineer", "React Developer India"],
+  description: "Explore the professional portfolio of Piyush Raval, an elite MERN Stack Developer specializing in React, Next.js, and high-performance technical architectures. Delivering world-class web applications with surgical precision.",
+  keywords: [
+    "Piyush Raval", 
+    "piyushraval", 
+    "Piyush Raval MERN Stack Developer", 
+    "MERN Stack Developer India", 
+    "Next.js Expert Portfolio", 
+    "Full Stack Engineer", 
+    "Software Engineer Portfolio",
+    "Piyush Press Technical Blog"
+  ],
+  verification: {
+    google: "76hffN_oOq1K8iF4VViIcTGEaCJZIBcicaVYgrXKdrE",
+  },
   authors: [{ name: "Piyush Raval", url: "https://github.com/PiyushRaval247" }],
   creator: "Piyush Raval",
   publisher: "Piyush Raval",
@@ -28,11 +40,11 @@ export const metadata = {
     locale: "en_US",
     url: "https://piyushraval.com",
     siteName: "Piyush Raval Portfolio",
-    title: "Piyush Raval | Full Stack Developer",
-    description: "Explore the technical expertise and creative projects of Piyush Raval, a passionate full stack developer building the future of the web.",
+    title: "Piyush Raval | MERN Stack Developer",
+    description: "Explore the technical expertise and elite projects of Piyush Raval, a passionate full-stack engineer and MERN specialist.",
     images: [
       {
-        url: "/og-image.png", // Ensure this exists in public/ or is a valid URL
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Piyush Raval Portfolio",
@@ -41,9 +53,9 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Piyush Raval | Full Stack Developer",
-    description: "Building modern, high-performance web applications with React and Next.js.",
-    creator: "@PiyushRaval", // Update if you have a handle
+    title: "Piyush Raval | MERN Stack Developer",
+    description: "Building high-performance, architecturally sound web applications with React and Next.js.",
+    creator: "@PiyushRaval",
     images: ["/og-image.png"],
   },
   alternates: {
@@ -61,16 +73,16 @@ const jsonLd = {
     "https://github.com/PiyushRaval247",
     "https://linkedin.com/in/piyush-raval",
   ],
-  "jobTitle": "Full Stack Developer",
-  "description": "Full Stack Developer specializing in React, Next.js, and modern web architectures.",
+  "jobTitle": "MERN Stack Developer & Full Stack Engineer",
+  "description": "Professional Full Stack Developer specializing in MERN stack architectures, Next.js, and high-performance technical engineering.",
   "knowsAbout": [
-    "Web Development",
-    "JavaScript",
-    "React",
-    "Next.js",
+    "MERN Stack",
+    "React.js",
+    "Next.js Architecture",
+    "Technical Writing",
     "Supabase",
-    "AI Integration",
-    "Tailwind CSS"
+    "Surgical UI Design",
+    "Full Stack Development"
   ]
 };
 
