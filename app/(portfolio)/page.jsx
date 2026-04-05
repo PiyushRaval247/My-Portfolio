@@ -1,16 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useLoading } from "@/context/LoadingContext";
 import WelcomeScreen from "@/components/WelcomeScreen";
 import { HomeContent } from "@/components/HomeContent";
 
 export default function Home() {
-  const [welcomeComplete, setWelcomeComplete] = useState(false);
+  const { isWelcomeComplete, setIsWelcomeComplete } = useLoading();
 
   return (
     <>
-      {!welcomeComplete ? (
-        <WelcomeScreen onWelcomeComplete={() => setWelcomeComplete(true)} />
+      {!isWelcomeComplete ? (
+        <WelcomeScreen onWelcomeComplete={() => setIsWelcomeComplete(true)} />
       ) : (
         <HomeContent />
       )}

@@ -46,7 +46,7 @@ export const HeroSection = () => {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden bg-gradient-to-b from-background via-background/80 to-primary/5"
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background/80 to-primary/5"
       ref={ref}
     >
       {/* Floating particles background */}

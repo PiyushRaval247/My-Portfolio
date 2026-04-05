@@ -30,7 +30,7 @@ const WelcomeScreen = ({ onWelcomeComplete }) => {
   };
 
   const currentColors = colors[theme] || colors.dark;
-  const portfolioUrl = "piyush-raval.vercel.app";
+  const portfolioUrl = "piyushraval.com";
   const welcomeMessages = [
     "Crafting digital experiences",
     "Software Engineer",

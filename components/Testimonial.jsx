@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { useInView } from "framer-motion";
 import Image from "next/image";
-import { Quote, Star, ChevronLeft, ChevronRight, Loader2, Sparkles } from "lucide-react";
+import { Quote, Star, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 export const TestimonialSection = () => {
@@ -57,8 +57,8 @@ export const TestimonialSection = () => {
 
   if (loading) {
     return (
-      <div className="py-24 flex items-center justify-center bg-black/5">
-        <Loader2 className="w-10 h-10 animate-spin text-primary opacity-20" />
+      <div className="py-24 flex items-center justify-center">
+        <Loader2 className="w-10 h-10 animate-spin text-primary opacity-50" />
       </div>
     );
   }
@@ -66,99 +66,100 @@ export const TestimonialSection = () => {
   return (
     <section
       id="testimonials"
-      className="relative py-24 sm:py-32 px-6 md:px-12 overflow-hidden border-t border-white/5 bg-[#030014]"
+      className="py-16 md:py-20 relative bg-gradient-to-b from-muted/20 to-background"
       ref={ref}
     >
-      <div className="max-w-[1550px] mx-auto relative z-10">
+      <div className="container mx-auto max-w-6xl relative z-10 px-4 md:px-0">
         
-        {/* Header: Sharp Editorial Style */}
-        <div className="flex flex-col md:flex-row items-end justify-between gap-12 mb-24 border-b border-white/10 pb-16">
-          <div className="max-w-2xl">
-             <motion.div
-               initial={{ opacity: 0, x: -20 }}
-               animate={isInView ? { opacity: 1, x: 0 } : {}}
-               className="flex items-center gap-4 mb-8"
-             >
-                <div className="w-12 h-1 bg-primary"></div>
-                <span className="text-[10px] font-black uppercase tracking-[0.5em] text-primary italic">Operational Reputation</span>
-             </motion.div>
-             
-             <h2 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-[-0.05em] text-white italic uppercase leading-[0.95]">
-                Public <span className="text-primary italic">Endorsements</span>
-             </h2>
-          </div>
-
-          <p className="text-base sm:text-lg text-white/40 font-medium max-w-sm italic text-right leading-relaxed">
-             A surgical look at professional collaborations and architectural validation from industry leaders.
-          </p>
+        {/* Header */}
+        <div className="text-center mb-12">
+          <motion.h2 
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl font-black tracking-tighter mb-4"
+          >
+            Client <span className="text-primary italic">Feedback</span>
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            viewport={{ once: true }}
+            className="text-lg text-muted-foreground max-w-2xl mx-auto font-medium opacity-80 italic"
+          >
+            A look at professional collaborations and thoughts from industry leaders.
+          </motion.p>
         </div>
 
         {/* Testimonial Feed */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <AnimatePresence mode="wait">
             {testimonials.length > 0 ? (
               testimonials.slice(currentIndex * itemsPerPage, (currentIndex + 1) * itemsPerPage).map((testimonial, idx) => (
                 <motion.div
                   key={`${testimonial.id}-${idx}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="p-10 sm:p-12 border-b md:border-b-0 md:border-r border-white/10 bg-white/[0.01] hover:bg-white/[0.03] transition-all flex flex-col group min-h-[400px]"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.4 }}
+                  className="group bg-card/40 backdrop-blur-xl rounded-[2rem] p-8 shadow-xl border border-white/5 hover:border-primary/20 hover:shadow-primary/5 transition-all duration-500 flex flex-col min-h-[360px]"
                 >
-                  <Quote className="h-10 w-10 text-primary/10 mb-10 group-hover:text-primary/40 transition-colors" />
+                  <Quote className="h-8 w-8 text-primary/30 mb-8 group-hover:text-primary transition-colors duration-500" />
 
-                  <p className="text-lg text-white/70 mb-12 flex-1 font-medium leading-relaxed italic border-l-2 border-white/5 pl-8 group-hover:border-primary/30 transition-colors">
+                  <p className="text-base text-foreground/80 mb-8 flex-1 font-medium leading-relaxed italic border-l-2 border-primary/20 pl-6 group-hover:border-primary/50 transition-colors">
                     "{testimonial.content}"
                   </p>
 
-                  <div className="mt-auto pt-10 border-t border-white/5">
-                    <div className="flex gap-1 mb-6">
+                  <div className="mt-auto pt-6 border-t border-white/5">
+                    <div className="flex gap-1 mb-4">
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
-                          className={`h-3 w-3 ${i < testimonial.rating ? 'text-primary fill-primary' : 'text-white/5'}`}
+                          className={`h-4 w-4 ${i < testimonial.rating ? 'text-primary fill-primary' : 'text-muted-foreground/30'}`}
                         />
                       ))}
                     </div>
 
-                    <div className="flex items-center gap-6">
-                      <div className="h-16 w-16 rounded-none border border-white/10 overflow-hidden shrink-0 group-hover:border-primary/50 transition-all relative">
+                    <div className="flex items-center gap-4">
+                      <div className="h-12 w-12 rounded-full overflow-hidden shrink-0 ring-2 ring-primary/20 group-hover:ring-primary/50 transition-all relative">
                         {testimonial.image ? (
                           <Image
                             src={testimonial.image}
                             alt={testimonial.name}
                             fill
-                            className="object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
+                            className="object-cover"
                           />
                         ) : (
-                          <div className="w-full h-full bg-white/5 flex items-center justify-center text-primary/40 font-black uppercase italic text-2xl">
+                          <div className="w-full h-full bg-primary/10 flex items-center justify-center text-primary font-black uppercase text-xl">
                             {testimonial.name.charAt(0)}
                           </div>
                         )}
                       </div>
                       <div className="min-w-0">
-                        <p className="font-black text-lg tracking-[-0.02em] text-white italic truncate uppercase leading-none mb-1">{testimonial.name}</p>
-                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 truncate italic leading-none">{testimonial.role}</p>
+                        <p className="font-bold text-base tracking-tight text-foreground truncate">{testimonial.name}</p>
+                        <p className="text-xs font-medium text-muted-foreground truncate">{testimonial.role}</p>
                       </div>
                     </div>
                   </div>
                 </motion.div>
               ))
             ) : (
-              /* PROFESSIONAL PLACEHOLDER (Ensures Section Visibility) */
+              /* PROFESSIONAL PLACEHOLDER */
               [...Array(3)].map((_, i) => (
-                <div key={i} className="p-12 border-r border-white/10 bg-white/[0.01] opacity-20 flex flex-col gap-10">
-                   <Quote className="w-10 h-10 opacity-10" />
-                   <div className="space-y-4">
-                      <div className="h-2 w-full bg-white/10 text-white"></div>
-                      <div className="h-2 w-4/5 bg-white/10 text-white"></div>
-                      <div className="h-2 w-3/4 bg-white/10 text-white"></div>
+                <div key={i} className="bg-card/20 rounded-[2rem] p-8 border border-white/5 opacity-50 flex flex-col min-h-[360px] animate-pulse">
+                   <div className="w-8 h-8 rounded-full bg-muted mb-8"></div>
+                   <div className="space-y-4 mb-auto">
+                      <div className="h-2 w-full bg-muted rounded"></div>
+                      <div className="h-2 w-5/6 bg-muted rounded"></div>
+                      <div className="h-2 w-4/5 bg-muted rounded"></div>
                    </div>
-                   <div className="mt-auto flex items-center gap-6">
-                      <div className="w-14 h-14 bg-white/10 text-white"></div>
+                   <div className="mt-8 pt-6 border-t border-white/5 flex items-center gap-4">
+                      <div className="w-12 h-12 bg-muted rounded-full"></div>
                       <div className="space-y-2">
-                        <div className="h-3 w-24 bg-white/10 text-white"></div>
-                        <div className="h-2 w-16 bg-white/10 text-white"></div>
+                        <div className="h-3 w-24 bg-muted rounded"></div>
+                        <div className="h-2 w-16 bg-muted rounded"></div>
                       </div>
                    </div>
                 </div>
@@ -167,44 +168,32 @@ export const TestimonialSection = () => {
           </AnimatePresence>
         </div>
 
-        {/* Operational Controls: Sharp Style */}
-        <div className="flex items-center justify-between mt-16 px-4">
-          {totalPages > 1 ? (
-             <>
-                <div className="flex items-center gap-8 text-[11px] font-black italic uppercase tracking-[0.4em] text-white/20">
-                  <span className="text-white">0{currentIndex + 1}</span>
-                  <div className="h-px w-20 bg-white/10 text-white"></div>
-                  <span>0{totalPages}</span>
-                </div>
-                
-                <div className="flex gap-0">
-                  <button
-                    onClick={prevTestimonial}
-                    className="w-16 h-16 flex items-center justify-center border border-white/10 hover:bg-white/5 text-white/20 hover:text-white transition-all text-white"
-                  >
-                    <ChevronLeft className="h-6 w-6" />
-                  </button>
-                  <button
-                    onClick={nextTestimonial}
-                    className="w-16 h-16 flex items-center justify-center border border-white/10 border-l-0 hover:bg-white/5 text-white/20 hover:text-white transition-all text-white"
-                  >
-                    <ChevronRight className="h-6 w-6" />
-                  </button>
-                </div>
-             </>
-          ) : (
-             <div className="flex items-center gap-4 py-8">
-                <Sparkles className="w-5 h-5 text-primary opacity-30 animate-pulse" />
-                <span className="text-[10px] font-black text-white/10 uppercase tracking-[0.5em] italic">Intelligence Log: Syncing Professional Endorsements</span>
-             </div>
-          )}
-        </div>
+        {/* Controls */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-4 mt-12">
+            <button
+              onClick={prevTestimonial}
+              className="w-12 h-12 rounded-full flex items-center justify-center bg-card shadow-md border border-white/10 hover:border-primary/50 text-foreground hover:text-primary transition-all duration-300"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <div className="flex gap-2 mx-4">
+              {[...Array(totalPages)].map((_, i) => (
+                <div 
+                  key={i} 
+                  className={`h-2 rounded-full transition-all duration-300 ${i === currentIndex ? 'w-8 bg-primary' : 'w-2 bg-primary/20'}`}
+                />
+              ))}
+            </div>
+            <button
+              onClick={nextTestimonial}
+              className="w-12 h-12 rounded-full flex items-center justify-center bg-card shadow-md border border-white/10 hover:border-primary/50 text-foreground hover:text-primary transition-all duration-300"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </div>
+        )}
       </div>
-
-      {/* Grid Pattern Background */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-[-1]" 
-        style={{ backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`, backgroundSize: '100px 100px' }}
-      ></div>
     </section>
   );
 };

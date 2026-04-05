@@ -38,7 +38,7 @@ export const ProjectsSection = () => {
   return (
     <section
       id="projects"
-      className="py-24 px-4 relative bg-gradient-to-b from-background to-muted/20"
+      className="py-16 md:py-20 relative bg-gradient-to-b from-background to-muted/20"
     >
       {/* Structured Data for Projects */}
       <script
@@ -72,7 +72,6 @@ export const ProjectsSection = () => {
           <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-4">
             Featured <span className="text-primary italic">Projects</span>
           </h2>
-          <div className="w-24 h-1 bg-primary mx-auto mb-4 opacity-50"></div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-medium opacity-80 italic">
             A curated inventory of high-impact technical deployments, crafted with precision and performance.
           </p>
@@ -147,7 +146,7 @@ export const ProjectsSection = () => {
         </div>
 
         {projects.length > 0 ? (
-          <div className="text-center mt-16 flex flex-col items-center gap-4">
+          <div className="text-center mt-8 flex flex-col items-center gap-4">
             {projects.length > 3 && (
               <button
                 onClick={() => setShowAll(!showAll)}

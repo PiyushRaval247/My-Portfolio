@@ -165,7 +165,7 @@ export const SkillsSection = () => {
   }
 
   return (
-    <section id="skills" className="py-28 px-4 relative bg-gradient-to-br from-background via-secondary/5 to-background">
+    <section id="skills" className="py-16 md:py-20 relative bg-gradient-to-br from-background via-secondary/5 to-background">
       <div className="container mx-auto max-w-6xl">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -177,7 +177,6 @@ export const SkillsSection = () => {
           <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-4 italic uppercase">
             Technical <span className="text-primary">Inventory</span>
           </h2>
-          <div className="w-24 h-1 bg-primary mx-auto mb-6 opacity-30 italic"></div>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg font-medium opacity-80 italic">
             A comprehensive index of my technical proficiencies and implementation levels.
           </p>

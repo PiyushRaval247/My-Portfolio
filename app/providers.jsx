@@ -2,6 +2,7 @@
 
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "../components/ui/toaster";
+import { LoadingProvider } from "../context/LoadingContext";
 
 export function Providers({ children }) {
   return (
@@ -11,8 +12,10 @@ export function Providers({ children }) {
       enableSystem
       disableTransitionOnChange
     >
-      {children}
-      <Toaster />
+      <LoadingProvider>
+        {children}
+        <Toaster />
+      </LoadingProvider>
     </ThemeProvider>
   );
 }

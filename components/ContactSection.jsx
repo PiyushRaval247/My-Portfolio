@@ -105,7 +105,7 @@ export const ContactSection = () => {
   };
 
   return (
-    <section id="contact" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 relative bg-background">
+    <section id="contact" className="py-16 md:py-20 relative bg-background">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-12 sm:mb-16">
           <span className="inline-block px-3 py-1 text-xs sm:text-sm font-medium rounded-full bg-primary/10 text-primary mb-3 sm:mb-4">
