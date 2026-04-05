@@ -5,15 +5,14 @@ import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import { 
   Calendar, 
-  Clock, 
   ArrowRight, 
   Loader2,
   Sparkles,
   ChevronLeft,
   ChevronRight,
   TrendingUp,
-  MoveUpRight,
-  Target
+  Target,
+  Search
 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -40,35 +39,35 @@ const FeaturedCarousel = ({ blogs }) => {
   const prev = () => setCurrentIndex((prev) => (prev - 1 + blogs.length) % blogs.length);
 
   return (
-    <div className="relative w-full aspect-[21/10] md:aspect-[25/9] mb-32 group overflow-hidden bg-white border border-black/10 rounded-none shadow-none">
+    <div className="relative w-full mb-16 md:mb-24 group overflow-hidden bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl flex flex-col md:flex-row md:aspect-[25/9]">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentBlog.id}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 grid grid-cols-1 md:grid-cols-12"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.8 }}
+          className="absolute inset-0 hidden md:grid md:grid-cols-12" // Desktop Layout Absolute layer
         >
-          {/* TEXT SIDE: SHARP & ARCHITECTURAL */}
-          <div className="md:col-span-5 p-12 lg:p-20 flex flex-col justify-center bg-[#fdfdfd] relative z-10 border-r border-black/10 text-black">
+          {/* DESKTOP TEXT SIDE */}
+          <div className="md:col-span-6 p-10 lg:p-16 flex flex-col justify-center relative z-10 w-full h-full">
              <motion.div 
                initial={{ opacity: 0, y: 15 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ delay: 0.4 }}
-               className="mb-10 flex items-center gap-3"
+               className="mb-6 flex items-center gap-3"
              >
-                <div className="w-10 h-1.5 bg-[#008060] rounded-none"></div>
-                <span className="text-[10px] font-black uppercase tracking-[0.5em] text-black/40 italic leading-none">
-                   SERIES {currentIndex + 1}
+                <div className="w-8 h-1 bg-gradient-to-r from-primary to-purple-600 rounded-full"></div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-primary">
+                   Featured Post
                 </span>
              </motion.div>
              
              <motion.h1 
-               initial={{ opacity: 0, y: 30 }}
+               initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
-               transition={{ delay: 0.5, duration: 1.2 }}
-               className="serif-font text-3xl md:text-4xl lg:text-5xl font-black tracking-[-0.04em] text-black leading-[1] mb-12 uppercase italic"
+               transition={{ delay: 0.5, duration: 0.8 }}
+               className="text-4xl lg:text-5xl font-black tracking-tight text-white/90 leading-[1.1] mb-6"
              >
                {currentBlog.title}
              </motion.h1>
@@ -76,115 +75,168 @@ const FeaturedCarousel = ({ blogs }) => {
              <motion.p 
                initial={{ opacity: 0 }}
                animate={{ opacity: 1 }}
-               transition={{ delay: 0.8 }}
-               className="text-xs md:text-sm text-black/50 leading-relaxed italic mb-14 max-w-sm border-l border-black/20 pl-8"
+               transition={{ delay: 0.7 }}
+               className="text-white/60 leading-relaxed mb-10 max-w-sm line-clamp-3"
              >
-                {currentBlog.sub_title}
+                {currentBlog.sub_title || currentBlog.description.substring(0, 100)}
              </motion.p>
              
              <motion.div
                initial={{ opacity: 0, y: 10 }}
                animate={{ opacity: 1, y: 0 }}
-               transition={{ delay: 0.9 }}
+               transition={{ delay: 0.8 }}
              >
                 <Link 
                   href={`/blog/${currentBlog.id}`}
-                  className="inline-flex items-center gap-5 text-[11px] font-black uppercase tracking-[0.4em] text-black hover:text-[#008060] transition-all group italic border-2 border-black/5 px-10 py-5 rounded-none hover:bg-black hover:text-white"
+                  className="inline-flex items-center gap-3 text-sm font-bold text-white bg-gradient-to-r from-primary to-purple-600 px-6 py-3 rounded-full hover:shadow-[0_0_20px_rgba(var(--primary),0.4)] transition-all hover:scale-105 group"
                 >
-                  ACCESS DISPATCH
-                  <MoveUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  Read Article
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
              </motion.div>
 
-             {/* Minimalist Progress Meter */}
-             <div className="absolute bottom-12 left-12 lg:left-20 flex items-center gap-8">
-                <span className="text-[10px] font-black text-black font-mono tracking-tighter">0{currentIndex + 1}</span>
-                <div className="h-px w-16 bg-black/5 relative">
-                   <motion.div 
-                      key={currentIndex}
-                      initial={{ scaleX: 0 }}
-                      animate={{ scaleX: 1 }}
-                      transition={{ duration: 12, ease: "linear" }}
-                      className="absolute inset-0 bg-[#008060] origin-left"
-                   />
-                </div>
-                <span className="text-[10px] font-black text-black/20 font-mono tracking-tighter">0{blogs.length}</span>
+             {/* Desktop Progress Indicators */}
+             <div className="absolute bottom-8 left-10 lg:left-16 flex gap-2">
+                {blogs.map((_, idx) => (
+                  <div key={idx} className={`h-1.5 rounded-full transition-all duration-500 ${idx === currentIndex ? 'w-8 bg-primary shadow-[0_0_10px_rgba(var(--primary),0.8)]' : 'w-2 bg-white/20'}`} />
+                ))}
              </div>
           </div>
 
-          {/* IMAGE SIDE: NEXT/IMAGE INTEGRATION */}
-          <div className="md:col-span-7 relative h-full overflow-hidden bg-slate-50">
+          {/* DESKTOP IMAGE SIDE */}
+          <div className="md:col-span-6 relative h-full overflow-hidden right-0 clip-path-slant group-hover:scale-105 transition-transform duration-1000">
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 hidden md:block w-48 -left-1" />
             <Image
               src={currentBlog.image_url || "/projects/project.png"}
               alt={currentBlog.title}
               fill
               priority
-              className="object-cover grayscale-[0.3] hover:grayscale-0 transition-all duration-1000"
+              className="object-cover opacity-80"
             />
-            <div className="absolute inset-0 bg-black/5 mix-blend-multiply opacity-0 hover:opacity-100 transition-opacity" />
+          </div>
+        </motion.div>
+
+        {/* MOBILE LAYOUT (Responsive Flex) */}
+        <motion.div
+          key={`mobile-${currentBlog.id}`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.8 }}
+          className="flex flex-col md:hidden w-full"
+        >
+          {/* Mobile Image */}
+          <div className="relative w-full h-[250px] overflow-hidden rounded-t-xl">
+            <Image
+              src={currentBlog.image_url || "/projects/project.png"}
+              alt={currentBlog.title}
+              fill
+              priority
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent z-10" />
+            
+            <div className="absolute bottom-4 left-6 z-20 flex items-center gap-2">
+              <div className="w-6 h-1 bg-primary rounded-full"></div>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-primary shadow-black drop-shadow-md">
+                Featured
+              </span>
+            </div>
+          </div>
+          
+          {/* Mobile Text Content */}
+          <div className="p-6 md:p-8 flex flex-col items-center text-center relative z-10 w-full h-full pb-12">
+             <h1 className="text-3xl font-black tracking-tight text-white/90 leading-[1.15] mb-4">
+               {currentBlog.title}
+             </h1>
+
+             <p className="text-sm text-white/60 leading-relaxed mb-8 line-clamp-3">
+                {currentBlog.sub_title || currentBlog.description.substring(0, 100)}
+             </p>
+             
+             <Link 
+               href={`/blog/${currentBlog.id}`}
+               className="w-full justify-center inline-flex items-center gap-3 text-sm font-bold text-white bg-gradient-to-r from-primary to-purple-600 px-6 py-4 rounded-full transition-all active:scale-95"
+             >
+               Read Article
+               <ArrowRight className="w-4 h-4" />
+             </Link>
+
+             {/* Mobile Progress */}
+             <div className="mt-8 flex gap-2 justify-center">
+                {blogs.map((_, idx) => (
+                  <div key={idx} className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentIndex ? 'w-8 bg-primary shadow-[0_0_10px_rgba(var(--primary),0.8)]' : 'w-2 bg-white/20'}`} />
+                ))}
+             </div>
           </div>
         </motion.div>
       </AnimatePresence>
 
-      {/* Control Cluster (Sharp Edges) */}
-      <div className="absolute bottom-0 right-0 flex z-30 opacity-0 group-hover:opacity-100 transition-all duration-700">
-         <button onClick={prev} className="w-16 h-16 flex items-center justify-center bg-white border-l border-t border-black/10 hover:bg-black hover:text-white transition-all text-black/30">
-            <ChevronLeft className="w-6 h-6" />
-         </button>
-         <button onClick={next} className="w-16 h-16 flex items-center justify-center bg-white border-l border-t border-black/10 hover:bg-black hover:text-white transition-all text-black/30">
-            <ChevronRight className="w-6 h-6" />
-         </button>
-      </div>
+      {/* Control Cluster (Desktop Mode Only) */}
+      {blogs.length > 1 && (
+        <div className="absolute bottom-8 right-8 hidden md:flex gap-3 z-30">
+           <button onClick={prev} className="w-10 h-10 rounded-full flex items-center justify-center bg-[#0a0a0a]/50 backdrop-blur-md border border-white/10 hover:border-primary/50 hover:text-primary transition-all text-white/90">
+              <ChevronLeft className="w-5 h-5" />
+           </button>
+           <button onClick={next} className="w-10 h-10 rounded-full flex items-center justify-center bg-[#0a0a0a]/50 backdrop-blur-md border border-white/10 hover:border-primary/50 hover:text-primary transition-all text-white/90">
+              <ChevronRight className="w-5 h-5" />
+           </button>
+        </div>
+      )}
     </div>
   );
 };
 
 const Sidebar = ({ popular, categories, onCategorySelect, activeCategory }) => {
   return (
-    <div className="space-y-24 h-fit lg:sticky lg:top-48">
-      {/* Editorial Subscription: ZERO RADIUS */}
-      <div className="bg-[#fdfdfd] p-12 border border-black/10 relative overflow-hidden group">
-        <div className="relative z-10 text-black">
-          <span className="text-[9px] font-black text-[#008060] uppercase tracking-[0.6em] mb-6 block italic">PROTOCOL: SYNC</span>
-          <h3 className="serif-font text-3xl font-black mb-8 text-black tracking-tighter uppercase italic leading-none border-b-2 border-dashed border-black/5 pb-4">Stay Intel.</h3>
-          <p className="text-[11px] text-black/40 font-medium mb-12 leading-relaxed italic pr-8 opacity-90">Operational transmissions sent weekly to the intelligence stream.</p>
+    <div className="space-y-12 md:space-y-16 h-fit lg:sticky lg:top-32">
+      {/* Newsletter */}
+      <div className="bg-white/5 backdrop-blur-xl p-6 md:p-8 rounded-xl border border-white/5 relative overflow-hidden group shadow-lg shadow-black/20">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <div className="relative z-10 text-white/90">
+          <span className="text-xs font-bold text-primary uppercase tracking-widest mb-4 block">Newsletter</span>
+          <h3 className="text-2xl font-black mb-3 tracking-tight">Stay updated.</h3>
+          <p className="text-sm text-white/60 mb-6 leading-relaxed">Get the latest articles and insights directly in your inbox.</p>
           
           <div className="space-y-4">
              <input 
                type="email" 
-               placeholder="Operational Address..." 
-               className="w-full px-8 py-6 bg-transparent rounded-none border border-black/10 focus:border-black outline-none transition-all text-[10px] font-black italic text-black placeholder:opacity-20 uppercase tracking-[0.4em]"
+               placeholder="Your email address..." 
+               className="w-full px-5 py-4 bg-[#0a0a0a]/80 rounded-xl border border-white/10 focus:border-primary/50 outline-none transition-all text-sm shadow-inner text-white/90"
              />
-             <button className="w-full bg-black text-white py-6 rounded-none font-black uppercase tracking-[0.5em] text-[10px] hover:bg-[#008060] transition-all italic">
-                INITIALIZE ACCESS
+             <button className="w-full bg-gradient-to-r from-primary to-purple-600 text-white py-4 rounded-xl font-bold transition-all shadow-lg hover:shadow-primary/30 active:scale-[0.98] lg:hover:scale-[1.02]">
+                Subscribe
              </button>
           </div>
         </div>
       </div>
 
       {/* Trending Intel */}
-      <div className="space-y-12">
-        <h3 className="serif-font font-black text-black text-2xl tracking-tighter italic uppercase border-b border-black/10 pb-6 leading-none">Trending intelligence</h3>
+      <div className="space-y-8 bg-white/5 p-6 md:p-8 rounded-xl border border-white/5">
+        <h3 className="font-bold text-lg tracking-tight border-b border-white/10 pb-4 flex items-center gap-2 text-white/90">
+          <TrendingUp className="w-5 h-5 text-primary" />
+          Trending Posts
+        </h3>
         
-        <div className="space-y-12">
+        <div className="space-y-6 mt-6">
            {popular.map((blog) => (
              <Link 
                key={blog.id} 
                href={`/blog/${blog.id}`}
-               className="flex items-start gap-8 group transition-all"
+               className="flex items-center gap-4 group transition-all"
              >
-                <div className="w-20 h-20 shrink-0 rounded-none border border-black/10 overflow-hidden bg-slate-50 relative">
+                <div className="w-16 h-16 shrink-0 rounded-xl overflow-hidden relative">
                    <Image 
                       src={blog.image_url || "/projects/project.png"} 
                       alt={blog.title}
                       fill
-                      className="object-cover transition-transform duration-1000 group-hover:scale-110" 
+                      className="object-cover transition-transform duration-700 group-hover:scale-110" 
                    />
                 </div>
                 <div className="min-w-0">
-                   <h5 className="text-[12px] font-black leading-snug group-hover:text-[#008060] transition-all mb-3 underline decoration-black/5 underline-offset-4 line-clamp-2 italic uppercase tracking-tight text-black">{blog.title}</h5>
-                   <div className="flex items-center gap-4 text-[9px] font-black uppercase tracking-[0.4em] text-black/20 italic">
-                      <Target className="w-3.5 h-3.5 opacity-30" />
+                   <h5 className="text-sm font-bold leading-snug group-hover:text-primary transition-colors line-clamp-2 text-white/90">{blog.title}</h5>
+                   <div className="flex items-center gap-2 mt-2 text-[11px] text-white/60 font-medium tracking-wide">
+                      <Target className="w-3 h-3 text-primary/50" />
                       <span>{new Date(blog.created_at).toLocaleDateString()}</span>
                    </div>
                 </div>
@@ -193,20 +245,21 @@ const Sidebar = ({ popular, categories, onCategorySelect, activeCategory }) => {
         </div>
       </div>
 
-      {/* Operational Index */}
-      <div className="space-y-12">
-        <h3 className="serif-font font-black text-black text-2xl tracking-tighter italic uppercase border-b border-black/10 pb-6 leading-none">Topic Index</h3>
-        <div className="flex flex-col gap-6">
+      {/* Categories */}
+      <div className="space-y-6 md:space-y-8 pl-1">
+        <h3 className="font-bold text-lg tracking-tight border-b border-white/10 pb-4 text-white/90">Categories</h3>
+        <div className="flex flex-wrap gap-2 md:gap-3">
            {categories.map((cat) => (
              <button
                key={cat}
                onClick={() => onCategorySelect(cat)}
-               className={`text-left text-[11px] font-black uppercase tracking-[0.5em] transition-all hover:text-[#008060] italic flex items-center justify-between group ${
-                 activeCategory === cat ? "text-[#008060]" : "text-black/30"
+               className={`px-4 py-2 rounded-full text-[11px] md:text-xs font-bold transition-all border ${
+                 activeCategory === cat 
+                   ? "bg-primary/20 border-primary/50 text-white shadow-[0_0_15px_rgba(var(--primary),0.3)]" 
+                   : "bg-white/5 border-white/10 text-white/60 hover:border-primary/30 hover:text-white"
                }`}
              >
                 {cat}
-                <div className={`h-[2px] w-8 bg-[#008060] transition-all group-hover:w-20 ${activeCategory === cat ? "opacity-100" : "opacity-0 invisible"}`}></div>
              </button>
            ))}
         </div>
@@ -218,39 +271,40 @@ const Sidebar = ({ popular, categories, onCategorySelect, activeCategory }) => {
 const ArticleCard = ({ blog }) => (
   <Link
     href={`/blog/${blog.id}`}
-    className="group flex flex-col h-full bg-white border border-black/10 rounded-none overflow-hidden hover:border-black transition-all duration-700 relative bg-[#fdfdfd]"
+    className="group flex flex-col h-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-500 shadow-lg hover:shadow-primary/10 relative"
   >
-    <div className="relative aspect-[16/11] overflow-hidden bg-slate-50">
+    <div className="relative aspect-[16/10] overflow-hidden">
       <Image
         src={blog.image_url || "/projects/project.png"}
         alt={blog.title}
         fill
-        className="object-cover grayscale transition-all duration-1000 group-hover:scale-105 group-hover:grayscale-0"
+        className="object-cover transition-transform duration-700 group-hover:scale-105"
       />
-      <div className="absolute top-0 right-0 z-20">
-        <span className="px-6 py-3 bg-black text-[9px] font-black text-white uppercase tracking-[0.5em] italic">
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/80 to-transparent opacity-80" />
+      <div className="absolute top-4 right-4 z-20">
+        <span className="px-4 py-1.5 bg-[#0a0a0a]/80 backdrop-blur-md rounded-full text-xs font-bold text-primary border border-white/10 shadow-sm">
            {blog.category}
         </span>
       </div>
     </div>
     
-    <div className="p-12 flex flex-col flex-1 border-t border-black/10 text-black">
-      <h3 className="serif-font text-2xl md:text-3xl font-black tracking-[-0.04em] mb-8 group-hover:text-[#008060] transition-all leading-[1.05] line-clamp-3 text-black italic uppercase">
+    <div className="p-6 md:p-8 flex flex-col flex-1">
+      <h3 className="text-xl font-bold tracking-tight mb-4 group-hover:text-primary transition-colors leading-tight line-clamp-2 text-white/90">
         {blog.title}
       </h3>
       
-      <p className="text-[12px] text-black/40 font-medium mb-16 leading-relaxed line-clamp-4 italic opacity-80 group-hover:text-black/60 transition-colors border-l border-black/10 pl-10">
+      <p className="text-sm text-white/60 mb-8 leading-relaxed line-clamp-3">
         {blog.sub_title || blog.description.substring(0, 150) + "..."}
       </p>
       
-      <div className="mt-auto pt-10 border-t border-dashed border-black/10 flex items-center justify-between text-black/15 font-black uppercase text-[9px] tracking-[0.5em] italic leading-none">
-         <div className="flex items-center gap-4">
-            <Calendar className="w-3.5 h-3.5" />
+      <div className="mt-auto pt-6 border-t border-white/5 flex items-center justify-between text-xs font-medium text-white/60">
+         <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-primary/70" />
             {new Date(blog.created_at).toLocaleDateString()}
          </div>
-         <div className="group-hover:text-black transition-all flex items-center gap-4 leading-none">
-            READ DATA
-            <MoveUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+         <div className="group-hover:text-primary transition-colors flex items-center gap-1 font-bold">
+            Read More
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
          </div>
       </div>
     </div>
@@ -301,56 +355,54 @@ function BlogSearchContent() {
 
   if (loading) {
     return (
-      <div className="py-60 flex flex-col items-center justify-center gap-8 bg-[#fdfdfd] min-h-screen text-black">
-         <Loader2 className="w-16 h-16 animate-spin text-[#008060] opacity-40" />
-         <p className="text-[12px] font-black uppercase tracking-[0.5em] text-black/20 animate-pulse italic leading-none">DECRYPTING ARCHIVES...</p>
+      <div className="py-60 flex flex-col items-center justify-center gap-6 bg-[#0a0a0a] min-h-screen">
+         <Loader2 className="w-12 h-12 animate-spin text-primary" />
+         <p className="text-sm font-medium text-white/60 animate-pulse">Loading Articles...</p>
       </div>
     );
   }
 
   return (
-    <div className="pt-32 lg:pt-48 pb-48 px-6 md:px-12 max-w-[1550px] mx-auto overflow-hidden bg-[#fdfdfd] relative min-h-screen text-black">
-      {/* Minimal Background Noise */}
-      <div className="fixed inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.012] grayscale pointer-events-none z-[0]" />
-      
-      {/* Search HUD Feedback: SHARP */}
+    <div className="pt-28 md:pt-32 pb-32 md:pb-48 px-4 md:px-8 lg:px-12 max-w-[1550px] mx-auto relative min-h-screen text-white/90 bg-[#0a0a0a]">
+      {/* Search Result Feedback */}
       {q && (
         <motion.div 
-          initial={{ opacity: 0, x: 20 }}
+          initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="mb-20 flex items-center gap-12 group text-black"
+          className="mb-12 md:mb-16 flex flex-col gap-2"
         >
-           <h2 className="serif-font text-5xl md:text-8xl font-black italic uppercase tracking-[-0.06em]">Index: <span className="text-[#008060] underline decoration-black/5 underline-offset-[20px]">{q}</span></h2>
-           <div className="h-[2px] flex-1 bg-black/5" />
-           <span className="text-[12px] font-black uppercase tracking-[0.6em] text-black/10 italic leading-none">{filteredBlogs.length} Results Found</span>
+           <h2 className="text-3xl md:text-4xl font-black tracking-tight">Search Results for: <span className="text-primary">{q}</span></h2>
+           <span className="text-sm font-medium text-white/60">{filteredBlogs.length} articles found</span>
         </motion.div>
       )}
 
-      {/* Featured Section (Carousel) - Sharp Editorial Redesign */}
+      {/* Featured Section */}
       {!q && selectedCategory === "All" && (
          <FeaturedCarousel blogs={featuredInCarousel} />
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_450px] gap-32 relative z-10 mt-12 text-black">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-12 lg:gap-16 relative z-10 mt-12">
         {/* Main Feed */}
-        <div className="space-y-32">
-           <div className="flex items-center justify-between border-b-2 border-black pb-12 mb-24">
-             <h2 className="serif-font text-4xl md:text-5xl font-black tracking-[-0.05em] text-black italic uppercase underline decoration-black/5 underline-offset-[16px] leading-none">Intelligence Stream</h2>
-             <div className="flex items-center gap-12">
-                <span className="text-[12px] font-black uppercase tracking-[0.8em] text-black/10 italic leading-none">STATUS: STABLE</span>
-                <div className="w-3 h-3 bg-[#008060] rounded-none"></div>
+        <div className="space-y-12">
+           <div className="flex items-center justify-between border-b border-white/10 pb-6">
+             <h2 className="text-2xl md:text-3xl font-black tracking-tight flex items-center gap-3">
+                <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-primary" />
+                Latest Articles
+             </h2>
+             <div className="flex items-center gap-3">
+                <span className="text-xs font-bold uppercase tracking-widest text-white/60">Showing {filteredBlogs.length}</span>
              </div>
            </div>
 
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
               <AnimatePresence mode="popLayout">
                 {listBlogs.map((blog, idx) => (
                   <motion.div
                     key={blog.id}
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.98 }}
-                    transition={{ duration: 1, delay: idx * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.5, delay: idx * 0.05 }}
                   >
                     <ArticleCard blog={blog} />
                   </motion.div>
@@ -359,9 +411,9 @@ function BlogSearchContent() {
            </div>
 
            {filteredBlogs.length === 0 && (
-             <div className="text-center py-64 border-2 border-dashed border-black/10 rounded-none bg-[#fdfdfd] text-black">
-                <Sparkles className="w-32 h-32 text-black/5 mx-auto mb-12" />
-                <h3 className="text-sm font-black uppercase tracking-[0.8em] italic text-black/10 leading-none">Archive Data Not Found</h3>
+             <div className="text-center py-40 border border-dashed border-white/10 rounded-xl bg-white/5 backdrop-blur-sm">
+                <Search className="w-16 h-16 text-white/20 mx-auto mb-6" />
+                <h3 className="text-lg font-bold text-white/60">No articles match your criteria</h3>
              </div>
            )}
         </div>
@@ -381,8 +433,8 @@ function BlogSearchContent() {
 export default function BlogListingPage() {
   return (
     <Suspense fallback={
-      <div className="py-60 flex flex-col items-center justify-center gap-8 bg-[#fdfdfd] min-h-screen text-black">
-         <Loader2 className="w-16 h-16 animate-spin text-[#008060] opacity-40" />
+      <div className="py-60 flex flex-col items-center justify-center gap-6 bg-[#0a0a0a] min-h-screen">
+         <Loader2 className="w-12 h-12 animate-spin text-primary" />
       </div>
     }>
       <BlogSearchContent />

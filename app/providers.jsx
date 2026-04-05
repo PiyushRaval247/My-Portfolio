@@ -8,8 +8,8 @@ export function Providers({ children }) {
   return (
     <ThemeProvider
       attribute="class"
-      defaultTheme="system"
-      enableSystem
+      defaultTheme="dark"
+      forcedTheme="dark"
       disableTransitionOnChange
     >
       <LoadingProvider>

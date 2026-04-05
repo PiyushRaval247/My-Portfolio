@@ -14,7 +14,7 @@ export async function generateMetadata({ params }) {
 
   if (error || !blog) {
     return {
-      title: "Dispatch Not Found | Piyush Press",
+      title: "Dispatch Not Found | Daily Blogs",
       description: "Searching archived dispatches..."
     };
   }

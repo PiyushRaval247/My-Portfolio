@@ -17,14 +17,14 @@ export const BlogFooter = () => {
     {
       title: "Navigation",
       links: [
-        { name: "Home", href: "/" },
-        { name: "Archives", href: "/blog" },
+        { name: "Portfolio", href: "/" },
+        { name: "Feed", href: "/blog" },
         { name: "Projects", href: "/#projects" },
         { name: "About", href: "/#about" }
       ]
     },
     {
-      title: "Focus",
+      title: "Categories",
       links: [
         { name: "Development", href: "/blog?category=Development" },
         { name: "Architecture", href: "/blog?category=Architecture" },
@@ -34,50 +34,55 @@ export const BlogFooter = () => {
   ];
 
   return (
-    <footer className="bg-white border-t border-black/5 py-12 px-6 md:px-12 mt-12">
-      <div className="max-w-[1550px] mx-auto">
+    <footer className="bg-[#0a0a0a] border-t border-white/5 py-12 px-6 md:px-12 mt-12 relative overflow-hidden">
+      {/* Background Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/5 blur-[120px] rounded-full pointer-events-none -z-10"></div>
+
+      <div className="max-w-[1550px] mx-auto relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 mb-12">
-          {/* Logo & Manifesto */}
+          {/* Logo & Description */}
           <div className="md:col-span-4 space-y-4">
-            <div className="flex items-center gap-2 group cursor-pointer">
-              <div className="w-8 h-8 bg-black rounded flex items-center justify-center transition-transform group-hover:rotate-6">
-                <BookOpen className="text-white w-4 h-4" />
+            <div className="flex items-center gap-3 group cursor-pointer w-fit">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-purple-600/20 border border-primary/20 flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:border-primary/50 group-hover:shadow-[0_0_15px_rgba(var(--primary),0.3)]">
+                <BookOpen className="text-primary w-5 h-5" />
               </div>
-              <span className="serif-font text-xl font-black uppercase tracking-tighter italic">Piyush Press</span>
+              <span className="text-xl font-bold tracking-tight text-white/90 group-hover:text-primary transition-colors">
+                Daily Blogs
+              </span>
             </div>
             
-            <p className="text-black/50 text-[11px] leading-relaxed max-w-xs font-medium italic">
-              A pragmatic exploration of modern software engineering. Deciphering the complex, one transmission at a time.
+            <p className="text-white/60 text-sm leading-relaxed max-w-sm font-medium">
+              Exploring modern software engineering. Sharing insights on web development, architecture, and optimal workflows.
             </p>
 
-            <div className="flex items-center gap-4">
-              <a href="https://github.com/PiyushRaval247" target="_blank" className="text-black/20 hover:text-black transition-colors">
-                <Github className="w-4 h-4" />
-              </a>
-              <a href="https://www.linkedin.com/in/piyush-raval-939594261/" target="_blank" className="text-black/20 hover:text-black transition-colors">
-                <Linkedin className="w-4 h-4" />
-              </a>
-              <a href="mailto:piyushraval2474@gmail.com" className="text-black/20 hover:text-black transition-colors">
-                <Mail className="w-4 h-4" />
-              </a>
+            <div className="flex items-center gap-4 pt-2">
+              {[ 
+                { icon: Github, href: "https://github.com/PiyushRaval247" },
+                { icon: Linkedin, href: "https://www.linkedin.com/in/piyush-raval-939594261/" },
+                { icon: Mail, href: "mailto:piyushraval2474@gmail.com" }
+              ].map((social, i) => (
+                <a key={i} href={social.href} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-primary hover:border-primary/30 hover:bg-primary/10 transition-all duration-300">
+                  <social.icon className="w-4 h-4" />
+                </a>
+              ))}
             </div>
           </div>
 
           {/* Quick Links */}
           {footerLinks.map((section) => (
-            <div key={section.title} className="md:col-span-2 space-y-4">
-              <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-black/90 italic border-b border-black/5 pb-2">
+            <div key={section.title} className="md:col-span-2 space-y-6">
+              <h4 className="text-sm font-bold text-white/90">
                 {section.title}
               </h4>
-              <ul className="space-y-2">
+              <ul className="space-y-3">
                 {section.links.map((link) => (
                   <li key={link.name}>
                     <Link 
                       href={link.href}
-                      className="text-black/40 hover:text-[#008060] text-[10px] font-bold uppercase tracking-widest transition-all flex items-center gap-2 group italic"
+                      className="text-white/60 hover:text-primary text-sm font-medium transition-all flex items-center gap-2 group"
                     >
-                      <ChevronRight className="w-2.5 h-2.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-[#008060]" />
-                      {link.name}
+                      <ChevronRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-primary" />
+                      <span className="group-hover:translate-x-1 transition-transform">{link.name}</span>
                     </Link>
                   </li>
                 ))}
@@ -85,38 +90,39 @@ export const BlogFooter = () => {
             </div>
           ))}
 
-          {/* Newsletter CTA Content-First */}
-          <div className="md:col-span-4 space-y-4 bg-slate-50 p-6 rounded-xl border border-black/5">
-            <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-[#008060] italic">Dispatch</h4>
-            <h3 className="text-lg font-black italic tracking-tighter uppercase leading-tight">Master the stack.</h3>
-            
-            <form className="relative group">
-               <input 
-                 type="email" 
-                 placeholder="Terminal email..." 
-                 className="w-full px-4 py-3 bg-white rounded-lg border border-black/5 focus:border-[#008060]/40 outline-none transition-all text-[10px] font-bold italic shadow-sm"
-               />
-               <button className="absolute right-1.5 top-1/2 -translate-y-1/2 p-2 bg-[#008060] text-white rounded-md hover:bg-[#006e52] transition-all" title="Subscribe">
-                  <ArrowUpRight className="w-3.5 h-3.5" />
-               </button>
-            </form>
+          {/* Newsletter CTA */}
+          <div className="md:col-span-4 space-y-5 bg-white/5 backdrop-blur-xl p-8 rounded-xl border border-white/5 shadow-xl relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+            <div className="relative z-10">
+               <h4 className="text-xs font-bold uppercase tracking-widest text-primary mb-2">Weekly Dispatch</h4>
+               <h3 className="text-xl font-bold text-white/90 mb-6">Stay ahead of the curve.</h3>
+               
+               <form className="relative flex items-center">
+                  <input 
+                    type="email" 
+                    placeholder="Enter your email..." 
+                    className="w-full pl-5 pr-14 py-3.5 bg-[#0a0a0a]/80 rounded-xl border border-white/10 focus:border-primary/50 outline-none transition-all text-sm shadow-inner text-white/90"
+                  />
+                  <button className="absolute right-1.5 p-2.5 bg-gradient-to-r from-primary to-purple-600 text-white rounded-lg shadow-lg hover:shadow-primary/30 hover:scale-105 transition-all" title="Subscribe">
+                     <ArrowUpRight className="w-4 h-4" />
+                  </button>
+               </form>
+            </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-black/5 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-4 text-[9px] font-black text-black/20 uppercase tracking-[0.2em] italic">
-             <span>© {currentYear} PIYUSH RAVAL</span>
-             <span className="w-1 h-1 bg-black/5 rounded-full"></span>
-             <span>COLLECTIVE INTELLIGENCE</span>
+        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex items-center gap-3 text-xs font-medium text-white/60">
+             <span>© {currentYear} Piyush Raval. All rights reserved.</span>
           </div>
 
-          <div className="flex items-center gap-6 text-[9px] font-black text-black/20 uppercase tracking-[0.15em] italic">
-             <Link href="#" className="hover:text-black transition-colors">Legal</Link>
-             <Link href="#" className="hover:text-black transition-colors">Privacy</Link>
-             <div className="flex items-center gap-2 px-2 py-0.5 bg-green-500/10 text-green-600 rounded-full border border-green-500/10">
-                <div className="w-1 h-1 bg-green-500 rounded-full animate-pulse"></div>
-                NOMINAL
+          <div className="flex items-center gap-6 text-xs font-medium text-white/60">
+             <Link href="#" className="hover:text-white/90 transition-colors">Legal</Link>
+             <Link href="#" className="hover:text-white/90 transition-colors">Privacy</Link>
+             <div className="flex items-center gap-2 px-3 py-1 bg-green-500/10 text-emerald-500 rounded-full border border-green-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_5px_rgba(16,185,129,0.8)]"></div>
+                All Systems Nominal
              </div>
           </div>
         </div>

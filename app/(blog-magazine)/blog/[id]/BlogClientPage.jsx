@@ -1,18 +1,16 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 import { 
   ArrowLeft, 
+  ArrowRight,
   Calendar, 
   MessageSquare, 
   Share2, 
   User,
-  Send,
   Loader2,
-  CheckCircle,
-  Hash,
   Clock,
   TrendingUp,
   Link as LinkIcon,
@@ -20,7 +18,7 @@ import {
   Target
 } from "lucide-react";
 import Link from "next/link";
-import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
+import { motion, useScroll, useSpring } from "framer-motion";
 import DOMPurify from "dompurify";
 
 export default function BlogClientPage({ blog, initialComments, latestArticles = [], popularArticles = [] }) {
@@ -95,7 +93,7 @@ export default function BlogClientPage({ blog, initialComments, latestArticles =
     },
     "publisher": {
       "@type": "Organization",
-      "name": "Piyush Press",
+      "name": "Daily Blogs",
       "logo": {
         "@type": "ImageObject",
         "url": "https://piyushraval.com/icon.png"
@@ -110,131 +108,133 @@ export default function BlogClientPage({ blog, initialComments, latestArticles =
   };
 
   return (
-    <div className="pt-32 pb-48 px-6 md:px-12 relative z-10 bg-[#fdfdfd] min-h-screen text-black">
+    <div className="pt-28 md:pt-32 pb-32 md:pb-48 px-4 md:px-8 lg:px-12 relative z-10 bg-[#0a0a0a] min-h-screen text-white/90 overflow-hidden md:overflow-visible">
       {/* BlogPosting Schema Embedding */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
       />
 
-      {/* Sharp Progress Bar (Zero Radius) */}
+      {/* Progress Bar */}
       <motion.div 
-         className="fixed top-0 left-0 right-0 h-2 bg-[#008060] origin-left z-[1000]"
+         className="fixed top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-purple-600 origin-left z-[1000] shadow-[0_0_15px_rgba(var(--primary),0.5)]"
          style={{ scaleX }}
       />
       
-      {/* Background Grain/Noise Overlay */}
-      <div className="fixed inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.015] grayscale pointer-events-none z-[-1]" />
-
-      <div className="max-w-[1550px] mx-auto relative">
+      <div className="max-w-[1550px] mx-auto relative w-full">
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="w-full"
         >
-          <div className="max-w-4xl">
-             <Link href="/blog" className="inline-flex items-center gap-5 text-[11px] font-black italic uppercase tracking-[0.4em] text-black/30 hover:text-[#008060] mb-20 group transition-all">
-                <ArrowLeft className="w-5 h-5 group-hover:-translate-x-3 transition-transform duration-700" />
-                Index of Dispatches
+          <div className="w-full">
+             <Link href="/blog" className="inline-flex items-center gap-3 text-sm font-bold text-white/60 hover:text-primary mb-10 md:mb-16 group transition-all">
+                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-2 transition-transform duration-500" />
+                Back to Articles
              </Link>
 
-             {/* Header Metadata: SHARP & ARCHITECTURAL */}
-             <div className="flex items-center gap-10 mb-12">
-                <div className="w-12 h-[2px] bg-[#008060]"></div>
-                <span className="text-[11px] font-black text-[#008060] uppercase tracking-[0.5em] italic">
-                   {blog.category}
-                </span>
-                <div className="h-px flex-1 bg-black/5" />
-                <div className="flex items-center gap-10 text-[10px] text-black/30 font-black uppercase tracking-[0.5em] italic leading-none">
-                   <div className="flex items-center gap-3">
-                      <Calendar className="w-4 h-4 opacity-40" />
-                      {new Date(blog.created_at).toLocaleDateString()}
-                   </div>
-                   <div className="flex items-center gap-3">
-                      <Clock className="w-4 h-4 opacity-40" />
-                      {calculateReadingTime} MIN DATA
-                   </div>
-                </div>
-             </div>
-
-             <h1 className="serif-font text-5xl md:text-6xl lg:text-8xl font-black mb-16 leading-[0.95] tracking-[-0.045em] text-black italic uppercase border-b-2 border-black/5 pb-16">
+             <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-8 md:mb-12 leading-snug tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white to-white/60 break-words w-full">
                {blog.title}
              </h1>
           </div>
           
-          <div className="max-w-3xl mb-32 border-l border-black/10 pl-12">
-            <p className="text-xl md:text-2xl text-black/40 italic leading-relaxed font-medium">
-              {blog.sub_title}
-            </p>
-          </div>
-
-          {/* Featured Asset: ELITE NEXT/IMAGE FRAME */}
-          <div className="aspect-[21/9] w-full rounded-none overflow-hidden border border-black/10 mb-32 bg-slate-100 relative group">
+          {/* Featured Asset */}
+          <div className="aspect-[16/9] md:aspect-[21/9] w-full rounded-xl overflow-hidden border border-white/10 mb-8 bg-white/5 relative group shadow-2xl shadow-black/50">
             <Image
               src={blog.image_url || "/projects/project.png"}
               alt={blog.title}
               fill
               priority
-              className="object-cover transition-all duration-1000 group-hover:scale-105"
+              className="object-cover transition-transform duration-1000 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-black/5 mix-blend-multiply transition-opacity group-hover:opacity-0" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/80 to-transparent" />
           </div>
 
-          {/* Core Layout: 850px Reading Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-32 relative">
+          {/* Post Meta & Subtitle underneath Image */}
+          <div className="flex flex-col gap-6 md:gap-8 mb-16 md:mb-24">
+             {/* Header Metadata */}
+             <div className="flex flex-wrap items-center gap-4 md:gap-6">
+                <span className="px-4 py-1.5 bg-primary/10 text-primary border border-primary/20 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(var(--primary),0.2)]">
+                   {blog.category}
+                </span>
+                <div className="flex items-center gap-4 md:gap-6 text-xs md:text-sm font-medium text-white/60">
+                   <div className="flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                      {new Date(blog.created_at).toLocaleDateString()}
+                   </div>
+                   <div className="flex items-center gap-2 border-l border-white/10 pl-4 md:pl-6">
+                      <Clock className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                      {calculateReadingTime} min read
+                   </div>
+                </div>
+             </div>
              
-             {/* ARTICLE BODY (Architectural Hierarchy) */}
-             <div className="lg:col-span-8">
-                <article className="prose prose-slate prose-lg md:prose-xl max-w-none prose-headings:serif-font prose-headings:font-black prose-headings:tracking-tighter prose-headings:italic prose-p:leading-loose prose-p:text-black/70 prose-p:mb-12 text-black/80 font-medium italic">
+             {/* Subtitle */}
+             <div className="w-full border-l-[3px] border-primary/50 pl-4 md:pl-6 ml-1">
+               <p className="text-sm md:text-base lg:text-lg text-white/60 leading-relaxed font-medium break-words w-full">
+                 {blog.sub_title}
+               </p>
+             </div>
+          </div>
+
+          {/* Core Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 relative w-full">
+             
+             {/* ARTICLE BODY */}
+             <div className="lg:col-span-8 w-full max-w-full overflow-hidden shrink-0">
+                <article className="prose prose-invert prose-base md:prose-lg lg:prose-xl max-w-none w-full break-words prose-headings:font-bold prose-headings:tracking-tight prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl text-white/80 leading-[1.8]">
                    <div 
-                     className="whitespace-normal magazine-body"
+                     className="magazine-body break-words w-full"
+                     style={{ wordBreak: 'break-word', overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }}
                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(blog.description) }}
                    />
                 </article>
 
-                {/* Tactical Engagement: Sharp Sharing */}
-                <div className="mt-32 pt-16 border-t-2 border-black flex flex-wrap items-center justify-between gap-12">
-                   <div className="flex items-center gap-12">
+                {/* Engagement / Sharing */}
+                <div className="mt-24 pt-12 border-t border-white/10 flex flex-wrap items-center justify-between gap-8">
+                   <div className="flex items-center gap-6">
                       <button 
                          onClick={handleCopyLink}
-                         className="flex items-center gap-4 text-[11px] font-black uppercase tracking-[0.5em] text-black hover:text-[#008060] transition-all italic group underline decoration-black/10 underline-offset-8"
+                         className="flex items-center gap-3 text-sm font-bold text-foreground hover:text-primary transition-colors bg-card/50 border border-white/5 py-3 px-6 rounded-full hover:border-primary/30"
                       >
-                         <LinkIcon className="w-4 h-4 group-hover:scale-125 transition-transform" />
-                         {copied ? "DATA SYNCED" : "COPY TRANS. URL"}
+                         <LinkIcon className="w-4 h-4" />
+                         {copied ? "Link Copied!" : "Copy Link"}
                       </button>
-                      <button className="flex items-center gap-4 text-[11px] font-black uppercase tracking-[0.5em] text-black/20 hover:text-black transition-all italic group">
-                         <MessageSquare className="w-4 h-4 opacity-30" />
-                         {comments.length} REGISTERED RESPONSES
-                      </button>
+                      <div className="flex items-center gap-3 text-sm font-bold text-muted-foreground px-6 py-3 bg-white/5 rounded-full border border-white/5">
+                         <MessageSquare className="w-4 h-4 text-primary/70" />
+                         {comments.length} Comments
+                      </div>
                    </div>
-                   <Link href="/blog" className="text-[10px] font-black text-black/15 uppercase tracking-[0.8em] italic leading-none hover:text-black transition-colors">
-                      END TERMINAL DISPATCH
-                   </Link>
                 </div>
              </div>
 
-             {/* SIDEBAR: SHARP & MINIMAL */}
-             <aside className="lg:col-span-4 space-y-24 lg:sticky lg:top-48 h-fit">
+             {/* SIDEBAR */}
+             <aside className="lg:col-span-4 space-y-16 lg:sticky lg:top-32 h-fit">
                 
-                {/* Trending Content: Next/Image optimized */}
+                {/* Trending Content */}
                 {popularArticles.length > 0 && (
-                   <div className="space-y-12">
-                      <h3 className="serif-font text-2xl font-black italic tracking-tighter text-black uppercase border-b border-black/10 pb-6">Trending now</h3>
-                      <div className="space-y-12 mt-12">
+                   <div className="space-y-8 bg-card/20 p-8 rounded-xl border border-white/5">
+                      <h3 className="text-xl font-bold tracking-tight text-foreground border-b border-white/10 pb-4 flex items-center gap-2">
+                        <TrendingUp className="w-5 h-5 text-primary" />
+                        Trending Now
+                      </h3>
+                      <div className="space-y-6 mt-6">
                          {popularArticles.map((item) => (
-                            <Link key={item.id} href={`/blog/${item.id}`} className="group flex items-start gap-8 transition-all">
-                               <div className="w-24 h-24 shrink-0 rounded-none border border-black/10 overflow-hidden bg-slate-100 relative">
+                            <Link key={item.id} href={`/blog/${item.id}`} className="group flex items-center gap-5 transition-all">
+                               <div className="w-20 h-20 shrink-0 rounded-xl border border-white/10 overflow-hidden relative">
                                   <Image 
                                      src={item.image_url} 
                                      alt={item.title}
                                      fill
-                                     className="object-cover transition-transform duration-1000 group-hover:scale-110" 
+                                     className="object-cover transition-transform duration-700 group-hover:scale-110" 
                                   />
-                                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                                </div>
                                <div className="min-w-0 py-1">
-                                  <h4 className="text-[13px] font-black leading-tight group-hover:text-[#008060] transition-all line-clamp-2 uppercase italic tracking-tight mb-3 underline decoration-black/5 underline-offset-4">{item.title}</h4>
-                                  <span className="text-[9px] font-black uppercase tracking-[0.5em] text-black/15 italic">ACCESS DATA</span>
+                                  <h4 className="text-sm font-bold leading-snug group-hover:text-primary transition-colors line-clamp-2 mb-2 text-foreground">{item.title}</h4>
+                                  <span className="text-xs font-medium text-muted-foreground flex items-center gap-1 group-hover:text-foreground transition-colors">
+                                    Read Post <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                                  </span>
                                </div>
                             </Link>
                          ))}
@@ -242,91 +242,101 @@ export default function BlogClientPage({ blog, initialComments, latestArticles =
                    </div>
                 )}
 
-                {/* Newsletter Hub: Sharp-Edged */}
-                <div className="bg-[#fdfdfd] p-12 border border-black/10 space-y-8 relative overflow-hidden group">
-                  <h4 className="text-[10px] font-black uppercase text-[#008060] tracking-[0.5em] italic">Operational Protocol</h4>
-                  <p className="text-[12px] text-black/40 leading-relaxed italic font-medium pr-8">Synchronize with our technical focus. Architectural transmissions sent weekly.</p>
-                  <div className="space-y-4 pt-4">
-                     <input 
-                       type="email" 
-                       placeholder="Operational Email..."
-                       className="w-full px-8 py-6 bg-transparent rounded-none border border-black/10 focus:border-black outline-none text-[10px] font-black italic tracking-[0.4em] uppercase transition-all"
-                     />
-                     <button className="w-full bg-black text-white hover:bg-[#008060] py-6 rounded-none text-[11px] font-black uppercase tracking-[0.6em] transition-all shadow-none italic">
-                        INITIALIZE ACCESS
-                     </button>
+                {/* Newsletter Hub */}
+                <div className="bg-card/40 backdrop-blur-xl p-8 rounded-xl border border-white/5 relative overflow-hidden group shadow-lg">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="relative z-10">
+                    <h4 className="text-xs font-bold uppercase text-primary tracking-widest mb-3">Newsletter</h4>
+                    <h3 className="text-xl font-bold text-foreground mb-4">Master the Stack.</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-6">Stay updated with the latest architecture drops and software techniques.</p>
+                    <div className="space-y-3">
+                       <input 
+                         type="email" 
+                         placeholder="Your email address..."
+                         className="w-full px-5 py-3.5 bg-background/80 rounded-xl border border-white/10 focus:border-primary/50 outline-none text-sm transition-all shadow-inner"
+                       />
+                       <button className="w-full bg-gradient-to-r from-primary to-purple-600 text-white hover:opacity-90 py-3.5 rounded-xl text-sm font-bold transition-all shadow-lg hover:shadow-primary/30">
+                          Subscribe
+                       </button>
+                    </div>
                   </div>
                 </div>
 
              </aside>
           </div>
 
-          {/* Intelligence Stream: Zero Radius Comments */}
-          <section className="pt-48 border-t-2 border-black">
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-32 items-start">
-                {/* Form: Architectural Layout */}
-                <div className="space-y-16">
-                   <div className="space-y-6">
-                      <h2 className="serif-font text-6xl font-black tracking-[-0.05em] italic uppercase">Intelligence Feed</h2>
-                      <div className="h-[2px] w-32 bg-[#008060]"></div>
-                      <p className="text-[12px] font-black text-black/20 uppercase tracking-[0.6em] italic">Contribute to the technical investigation log.</p>
+          {/* Comments Section */}
+          <section className="pt-32 mt-32 border-t border-white/10">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-start">
+                {/* Form */}
+                <div className="space-y-10 bg-card/30 p-8 md:p-12 rounded-xl border border-white/5">
+                   <div className="space-y-4">
+                      <h2 className="text-3xl font-black tracking-tight flex items-center gap-3">
+                        Join the Discussion
+                        <MessageSquare className="w-6 h-6 text-primary" />
+                      </h2>
+                      <p className="text-sm text-muted-foreground">Share your thoughts or ask a question about this topic.</p>
                    </div>
                    
-                   <form onSubmit={handleCommentSubmit} className="space-y-8">
-                      <div className="grid grid-cols-1 gap-8">
+                   <form onSubmit={handleCommentSubmit} className="space-y-6">
+                      <div className="space-y-6">
                          <input
                            type="text"
                            required
-                           placeholder="Operational Name"
+                           placeholder="Your Name"
                            value={commentData.name}
                            onChange={(e) => setCommentData({ ...commentData, name: e.target.value })}
-                           className="w-full px-10 py-7 bg-transparent rounded-none border-b border-black/10 focus:border-black outline-none transition-all text-[12px] font-black italic tracking-[0.5em] text-black"
+                           className="w-full px-6 py-4 bg-background/80 rounded-xl border border-white/10 focus:border-primary/50 outline-none transition-all text-sm shadow-inner text-foreground"
                          />
                          <textarea
                            required
-                           rows="8"
-                           placeholder="Technical insight/Transmission payload..."
+                           rows="6"
+                           placeholder="Your comment..."
                            value={commentData.content}
                            onChange={(e) => setCommentData({ ...commentData, content: e.target.value })}
-                           className="w-full px-10 py-8 bg-transparent rounded-none border-b border-black/10 focus:border-black outline-none transition-all text-base leading-loose font-medium italic text-black"
+                           className="w-full px-6 py-4 bg-background/80 rounded-xl border border-white/10 focus:border-primary/50 outline-none transition-all text-sm leading-relaxed shadow-inner text-foreground resize-none"
                          />
                       </div>
                       <button
                         type="submit"
                         disabled={commentLoading}
-                        className="w-full bg-black text-white py-8 rounded-none font-black uppercase tracking-[0.6em] flex items-center justify-center gap-6 hover:bg-[#008060] transition-all text-[12px] italic"
+                        className="w-full bg-gradient-to-r from-primary to-purple-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-3 hover:scale-[1.02] shadow-lg hover:shadow-primary/30 transition-all disabled:opacity-50 disabled:scale-100"
                       >
-                        {commentLoading ? <Loader2 className="animate-spin w-8 h-8" /> : (
+                        {commentLoading ? <Loader2 className="animate-spin w-6 h-6" /> : (
                           <>
-                             DEPLOY PAYLOAD
-                             <MoveUpRight className="w-6 h-6" />
+                             Post Comment
+                             <MoveUpRight className="w-5 h-5" />
                           </>
                         )}
                       </button>
                       {success && (
-                        <p className="text-[11px] font-black uppercase tracking-[0.6em] text-green-600 text-center italic mt-10">
-                           SYNCING TRANSMISSION. ARCHIVE LOG PENDING.
+                        <p className="text-sm font-bold text-emerald-500 text-center mt-4 bg-emerald-500/10 py-3 rounded-lg border border-emerald-500/20">
+                           Comment submitted! Pending approval.
                         </p>
                       )}
                    </form>
                 </div>
 
-                {/* Comment Waterfall: Sharp Corners */}
-                <div className="space-y-20 pt-10">
+                {/* Comment Feed */}
+                <div className="space-y-6">
+                   {comments.length === 0 && (
+                     <div className="text-center py-20 border border-dashed border-white/10 rounded-xl bg-card/20 text-muted-foreground">
+                        Be the first to share your thoughts!
+                     </div>
+                   )}
                    {comments.map((comment, idx) => (
-                     <div key={comment.id} className="group space-y-6 relative border-l-2 border-black/5 pl-12 pb-12">
-                        <div className="absolute top-0 -left-[5px] w-[8px] h-[8px] bg-black opacity-10 group-hover:opacity-100 group-hover:bg-[#008060] transition-all"></div>
-                        <div className="flex items-center gap-10">
-                           <div className="w-16 h-16 bg-black/[0.03] rounded-none border border-black/10 flex items-center justify-center font-black uppercase italic text-black/20 group-hover:bg-black group-hover:text-white transition-all duration-700">
+                     <div key={comment.id} className="group p-6 bg-card/40 backdrop-blur-sm border border-white/5 rounded-xl relative shadow-lg hover:border-primary/30 transition-colors">
+                        <div className="flex items-center gap-4 mb-4">
+                           <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-purple-600/20 rounded-full border border-primary/20 flex items-center justify-center font-bold text-primary group-hover:scale-110 transition-transform">
                               {(comment?.name?.[0] || 'U').toUpperCase()}
                            </div>
                            <div className="flex flex-col">
-                              <h4 className="font-black text-xl italic uppercase tracking-tighter leading-none mb-2">{comment.name}</h4>
-                              <span className="text-[10px] font-black uppercase tracking-[0.5em] text-black/15 italic">Transmission Received</span>
+                              <h4 className="font-bold text-foreground">{comment.name}</h4>
+                              <span className="text-xs font-medium text-muted-foreground">Community Member</span>
                            </div>
                         </div>
-                        <p className="text-base text-black/40 leading-loose italic max-w-lg group-hover:text-black transition-colors">
-                           "{comment.content}"
+                        <p className="text-sm text-foreground/80 leading-relaxed pl-16">
+                           {comment.content}
                         </p>
                      </div>
                    ))}

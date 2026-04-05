@@ -5,44 +5,43 @@ import { Suspense } from "react";
 
 export default function MagazineLayout({ children }) {
   return (
-    <div className="min-h-screen bg-white text-black selection:bg-[#008060]/10 font-sans antialiased selection:text-[#008060]">
-      {/* Magazine Background: Professional Light Theme */}
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_-20%,rgba(0,0,0,0.01),transparent)] pointer-events-none" />
+    <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 font-sans antialiased selection:text-primary-foreground">
+      {/* Magazine Background: Ambient Dark Theme */}
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_-20%,rgba(139,92,246,0.05),transparent)] pointer-events-none" />
       
-      {/* Editorial Design System (Swiss Grid Architecture) */}
+      {/* Dynamic Design System Overrides */}
       <style dangerouslySetInnerHTML={{ __html: `
-        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
-        .serif-font { font-family: 'Lora', serif; }
+        /* High-Density Layout Overrides for Prose */
+        .magazine-body h2 { margin-top: 4rem !important; margin-bottom: 2rem !important; color: hsl(var(--foreground)) !important; }
+        .magazine-body h3 { margin-top: 3rem !important; margin-bottom: 1.5rem !important; color: hsl(var(--foreground)) !important; }
+        .magazine-body p { margin-bottom: 2.5rem !important; color: hsl(var(--muted-foreground)) !important; }
+        .magazine-body a { color: hsl(var(--primary)) !important; text-decoration: none !important; }
+        .magazine-body a:hover { text-decoration: underline !important; }
         
-        /* Modern Architectural Code Styling */
         .prose pre { 
-          background: #f8f8f8 !important; 
-          border: 1px solid rgba(0,0,0,0.08) !important; 
-          border-radius: 0 !important; 
-          padding: 2.5rem !important;
-          box-shadow: none !important;
+          background: hsl(var(--card)) !important; 
+          border: 1px solid rgba(255,255,255,0.05) !important; 
+          border-radius: 1rem !important; 
+          padding: 2rem !important;
+          box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5) !important;
         }
         .prose code { 
-          color: #008060 !important; 
-          background: rgba(0,128,96,0.05) !important; 
+          color: hsl(var(--primary)) !important; 
+          background: rgba(139,92,246,0.1) !important; 
           padding: 0.2em 0.5em !important;
-          border-radius: 0 !important;
+          border-radius: 0.5rem !important;
           font-weight: 700 !important;
         }
         .prose pre code {
           background: transparent !important;
           padding: 0 !important;
-          color: #222 !important;
+          color: hsl(var(--foreground)) !important;
           font-weight: 400 !important;
         }
-        
-        /* High-Density Layout Overrides */
-        .magazine-body h2 { margin-top: 4rem !important; margin-bottom: 2rem !important; }
-        .magazine-body p { margin-bottom: 2.5rem !important; }
       `}} />
 
       {/* Suspense is required for BlogNavbar as it uses useSearchParams() */}
-      <Suspense fallback={<div className="h-20 bg-white border-b border-black/5" />}>
+      <Suspense fallback={<div className="h-20 bg-background/80 border-b border-white/5" />}>
         <BlogNavbar />
       </Suspense>
       

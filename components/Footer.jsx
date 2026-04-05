@@ -3,11 +3,9 @@
 import {
   ArrowUp,
   Linkedin,
-
   Github,
   Mail,
   Phone,
-  MapPin,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -16,7 +14,6 @@ export const Footer = () => {
   
   const socialLinks = [
     { icon: <Linkedin size={18} />, href: "https://www.linkedin.com/in/piyush-raval-939594261/", label: "LinkedIn" },
-
     { icon: <Github size={18} />, href: "https://github.com/PiyushRaval247", label: "GitHub" },
   ];
 
@@ -59,18 +56,21 @@ export const Footer = () => {
       <div className="max-w-6xl mx-auto">
         {/* Glass background container */}
         <motion.div 
-          className="backdrop-blur-lg bg-white/70 dark:bg-gray-900/70 rounded-xl p-8 border border-white/20 dark:border-gray-700/50 shadow-lg"
+          className="bg-card/40 backdrop-blur-xl rounded-[2rem] p-8 md:p-12 border border-white/5 shadow-2xl relative overflow-hidden group"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
           variants={containerVariants}
         >
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Subtle Glow */}
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full pointer-events-none -z-10 group-hover:bg-primary/10 transition-colors duration-1000"></div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
             {/* Branding */}
-            <motion.div variants={itemVariants} className="space-y-4">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white">PIYUSH</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                Digital designer & developer creating meaningful experiences.
+            <motion.div variants={itemVariants} className="space-y-6">
+              <h3 className="text-2xl font-black text-foreground tracking-tight">PIYUSH</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed font-medium">
+                Digital designer & developer creating meaningful experiences. Building high-performance software systems.
               </p>
               <div className="flex space-x-4">
                 {socialLinks.map((social, index) => (
@@ -80,7 +80,7 @@ export const Footer = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors duration-300"
+                    className="w-10 h-10 rounded-full bg-background border border-white/10 flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/30 transition-all duration-300 shadow-sm hover:shadow-[0_0_15px_rgba(var(--primary),0.2)]"
                     whileHover={{ y: -2 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -91,9 +91,9 @@ export const Footer = () => {
             </motion.div>
 
             {/* Navigation */}
-            <motion.div variants={itemVariants}>
-              <h4 className="text-gray-900 dark:text-white font-medium mb-4 text-sm uppercase tracking-wider">Navigation</h4>
-              <ul className="space-y-3">
+            <motion.div variants={itemVariants} className="md:pl-8">
+              <h4 className="text-foreground font-bold mb-6 text-sm uppercase tracking-widest">Navigation</h4>
+              <ul className="space-y-4">
                 {quickLinks.map((link, index) => (
                   <motion.li 
                     key={index}
@@ -102,8 +102,9 @@ export const Footer = () => {
                   >
                     <a 
                       href={link.href} 
-                      className="hover:text-gray-900 dark:hover:text-white transition-colors duration-300 text-sm text-gray-600 dark:text-gray-300"
+                      className="text-muted-foreground hover:text-primary transition-colors duration-300 text-sm font-medium flex items-center gap-2 group/link"
                     >
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary/20 group-hover/link:bg-primary transition-colors"></span>
                       {link.name}
                     </a>
                   </motion.li>
@@ -113,24 +114,24 @@ export const Footer = () => {
 
             {/* Contact */}
             <motion.div variants={itemVariants}>
-              <h4 className="text-gray-900 dark:text-white font-medium mb-4 text-sm uppercase tracking-wider">Contact</h4>
-              <ul className="space-y-3">
+              <h4 className="text-foreground font-bold mb-6 text-sm uppercase tracking-widest">Contact</h4>
+              <ul className="space-y-4">
                 {contactInfo.map((info, index) => (
                   <motion.li 
                     key={index}
-                    className="flex items-start space-x-3 text-sm"
+                    className="flex items-center space-x-3 text-sm group/contact"
                     whileHover={{ scale: 1.02 }}
                   >
-                    <span className="text-gray-600 dark:text-gray-400 mt-0.5">{info.icon}</span>
+                    <span className="text-primary/70 group-hover/contact:text-primary transition-colors">{info.icon}</span>
                     {info.href ? (
                       <a 
                         href={info.href} 
-                        className="hover:text-gray-900 dark:hover:text-white transition-colors duration-300 text-gray-600 dark:text-gray-300"
+                        className="text-muted-foreground hover:text-foreground transition-colors duration-300 font-medium"
                       >
                         {info.text}
                       </a>
                     ) : (
-                      <span className="text-gray-600 dark:text-gray-300">{info.text}</span>
+                      <span className="text-muted-foreground font-medium">{info.text}</span>
                     )}
                   </motion.li>
                 ))}
@@ -138,23 +139,23 @@ export const Footer = () => {
             </motion.div>
 
             {/* Newsletter */}
-            <motion.div variants={itemVariants} className="space-y-4">
-              <h4 className="text-gray-900 dark:text-white font-medium text-sm uppercase tracking-wider">Newsletter</h4>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                Subscribe to get updates on my latest work.
+            <motion.div variants={itemVariants} className="space-y-6">
+              <h4 className="text-foreground font-bold text-sm uppercase tracking-widest">Newsletter</h4>
+              <p className="text-muted-foreground text-sm font-medium">
+                Sign up for the latest insights in software and design.
               </p>
-              <form className="space-y-3">
+              <form className="relative flex flex-col gap-3">
                 <input 
                   type="email" 
-                  placeholder="Your email" 
-                  className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 dark:bg-gray-800/50 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-900 dark:focus:ring-gray-300 focus:border-gray-900 dark:focus:border-gray-300 w-full"
+                  placeholder="Your email address" 
+                  className="px-4 py-3 text-sm bg-background/50 border border-white/10 rounded-xl focus:outline-none focus:border-primary/50 text-foreground transition-colors w-full shadow-inner"
                   required
                 />
                 <button 
                   type="submit"
-                  className="bg-gray-900 hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-200 dark:text-gray-900 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-300 w-full"
+                  className="bg-gradient-to-r from-primary to-purple-600 text-white px-4 py-3 rounded-xl text-sm font-bold transition-all shadow-lg hover:shadow-primary/30 w-full hover:scale-[1.02]"
                 >
-                  Subscribe
+                  Subscribe Now
                 </button>
               </form>
             </motion.div>
@@ -162,24 +163,23 @@ export const Footer = () => {
 
           {/* Bottom bar */}
           <motion.div 
-            className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700/50 flex flex-col items-center text-xs text-gray-600 dark:text-gray-400 space-y-4 sm:space-y-0 sm:flex-row sm:justify-between"
+            className="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-muted-foreground font-medium"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
           >
             <div>
-              <p>© {currentYear} Piyush. All rights reserved.</p>
+              <p>© {currentYear} Piyush Raval. All rights reserved.</p>
             </div>
             
-            <div className="flex items-center space-x-6">
-              <a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Privacy</a>
-              <a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Terms</a>
-              <a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Cookies</a>
+            <div className="flex items-center space-x-8">
+              <a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-foreground transition-colors">Terms of Service</a>
               <motion.a
                 href="#hero"
                 aria-label="Back to top"
-                className="p-2 rounded-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200 transition-all duration-300"
+                className="w-10 h-10 flex items-center justify-center rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors border border-primary/20 shadow-lg shadow-primary/10"
                 whileHover={{ y: -3 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -191,4 +191,4 @@ export const Footer = () => {
       </div>
     </footer>
   );
-};
+};;
